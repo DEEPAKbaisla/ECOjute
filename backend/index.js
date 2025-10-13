@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import bagRoute from "./routes/bag-route.js";
 import userRoute from "./routes/user-route.js";
-import cartRoute from './routes/cart-route.js'
+import cartRoute from "./routes/cart-route.js";
 import mongoose from "mongoose";
 import cors from "cors";
 dotenv.config();
@@ -18,7 +18,6 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-
 // connect to mongoDB
 try {
   mongoose.connect(URI);
@@ -29,8 +28,11 @@ try {
 //routes
 app.use("/bags", bagRoute);
 app.use("/user", userRoute);
-app.use("/cart", cartRoute)
+app.use("/cart", cartRoute);
 
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
+});
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
