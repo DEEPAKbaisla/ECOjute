@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
