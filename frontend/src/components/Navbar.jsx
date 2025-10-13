@@ -46,7 +46,7 @@ function Navbar() {
       </li>
       {authUser && authUser.role === "USER" && (
         <li>
-          <a href="">cart</a>
+          <a href="/cart">cart</a>
         </li>
       )}
       {/* <li>

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Navbar";
+import toast from "react-hot-toast";
 
 const BagList = () => {
-
-  
   const [bags, setBags] = useState([]);
 
   useEffect(() => {
@@ -21,6 +20,25 @@ const BagList = () => {
     fetchBags();
   }, []);
 
+  const addToCart = (bag) => {
+    try {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Check if bag already exists in cart
+      const existing = cart.find((item) => item._id === bag._id);
+
+      if (existing) {
+        existing.quantity = (existing.quantity || 1) + 1;
+      } else {
+        cart.push({ ...bag, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      toast.success(`${bag.name} added to cart!`);
+    } catch (err) {
+      console.log("Error adding to cart:", err);
+    }
+  };
 
   return (
     <>
@@ -45,8 +63,14 @@ const BagList = () => {
                 <h2 className="text-lg font-semibold text-black">{bag.name}</h2>
                 <p className="text-gray-500 text-sm">{bag.category}</p>
                 <p className="text-gray-800 font-bold mt-2">₹{bag.price}</p>
-                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md">
-                  Add to cart
+
+                <button
+                  onClick={() => {
+                    addToCart(bag);
+                    
+                  }}
+                  className="bg-green-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-green-600 transition-all ">
+                  Add to Cart
                 </button>
               </div>
             </div>
@@ -58,5 +82,3 @@ const BagList = () => {
 };
 
 export default BagList;
-
-

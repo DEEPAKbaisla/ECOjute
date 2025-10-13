@@ -49,7 +49,7 @@ export const login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
+    console.log('ye aara ha ' ,error.message);
     return res.status(400).json({ message: "something went wrong in login" });
   }
 };
