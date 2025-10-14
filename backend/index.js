@@ -9,21 +9,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   })
-// );
-// const cors = require("cors");
 
-// app.use(cors({
-//   origin: "https://ec-ojute-9nt6.vercel.app",
-//   credentials: true 
-// }));
 
 app.use(cors({
-  origin: ["https://ec-ojute-9nt6.vercel.app"], 
+  origin: process.env.FRONTEND_URL, 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
@@ -44,7 +33,7 @@ app.use("/user", userRoute);
 app.use("/cart", cartRoute);
 
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("Backend is running very well!");
 });
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
