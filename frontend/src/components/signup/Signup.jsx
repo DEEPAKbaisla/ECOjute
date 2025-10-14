@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Login from "../Login";
+import Login from "../../components/Login";
 import { Link, Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
