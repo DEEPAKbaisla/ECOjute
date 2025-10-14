@@ -28,9 +28,9 @@ try {
   console.log(error.message);
 }
 //routes
-app.use("/bags", bagRoute);
-app.use("/user", userRoute);
-app.use("/cart", cartRoute);
+app.use("/api/bags", bagRoute);
+app.use("/api/user", userRoute);
+app.use("/api/cart", cartRoute);
 
 app.get("/", (req, res) => {
   res.send("Backend is running very well!");

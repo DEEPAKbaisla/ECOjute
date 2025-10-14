@@ -20,7 +20,7 @@ function Signup() {
       password: data.password,
     };
     await axios
-      .post("https://ec-ojute.vercel.app/user/signup", userInfo)
+      .post("https://ec-ojute.vercel.app/api/user/signup", userInfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {
