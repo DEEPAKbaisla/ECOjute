@@ -1,6 +1,4 @@
 import React from "react";
-// import banner from "../assets/banner.jpg";
-// import banner2 from "../assets/b5.png";
 import banner2 from "../assets/bag.png";
 
 function Banner() {
