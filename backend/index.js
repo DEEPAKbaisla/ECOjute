@@ -9,12 +9,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   })
+// );
+// const cors = require("cors");
+
+app.use(cors({
+  origin: "https://ec-ojute-9nt6.vercel.app",
+  credentials: true 
+}));
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 

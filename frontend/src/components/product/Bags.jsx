@@ -9,7 +9,7 @@ const BagList = () => {
   useEffect(() => {
     const fetchBags = async () => {
       try {
-        const response = await axios.get("ec-ojute.vercel.app/bags");
+        const response = await axios.get("https://ec-ojute.vercel.app/bags");
         if (response.data.success) {
           setBags(response.data.data);
         }
@@ -67,7 +67,6 @@ const BagList = () => {
                 <button
                   onClick={() => {
                     addToCart(bag);
-                    
                   }}
                   className="bg-green-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-green-600 transition-all ">
                   Add to Cart
