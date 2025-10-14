@@ -49,7 +49,7 @@ const BagList = () => {
           Browse our collection of sustainable jute products
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 dark:bg-gray-900  ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 dark:bg-gray-800  ">
           {bags.map((bag) => (
             <div
               key={bag._id}

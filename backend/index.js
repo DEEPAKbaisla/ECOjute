@@ -17,9 +17,15 @@ const URI = process.env.MONGODB_URI;
 // );
 // const cors = require("cors");
 
+// app.use(cors({
+//   origin: "https://ec-ojute-9nt6.vercel.app",
+//   credentials: true 
+// }));
+
 app.use(cors({
-  origin: "https://ec-ojute-9nt6.vercel.app",
-  credentials: true 
+  origin: ["https://ec-ojute-9nt6.vercel.app"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 }));
 
 app.use(express.json());
