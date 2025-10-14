@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Login from "../../components/Login";
 import { Link, Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Login from "../Login";
 
 function Signup() {
   const [redirect, setRedirect] = useState(false);
@@ -99,7 +99,7 @@ function Signup() {
           </div>
         </div>
       </form>
-      <Login />
+      <Login/>
     </div>
   );
 }

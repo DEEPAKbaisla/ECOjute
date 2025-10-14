@@ -68,9 +68,9 @@ function Login() {
               type="submit"
               value="Login"
             />
-            <button className="mt-4">
-              <p className=""> Create account</p>
-              <Link to="/signup" className="text-blue-700 underline font-bold">
+            <button className="mt-4 flex gap-1">
+              <p className=""> Create account !</p>
+              <Link to="/signup" className="text-blue-700 underline ">
                 {" "}
                 sign up
               </Link>
