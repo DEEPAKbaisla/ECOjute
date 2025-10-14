@@ -55,7 +55,7 @@ const BagList = () => {
               key={bag._id}
               className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
               <img
-                src={`ec-ojute.vercel.app/uploads/${bag.image}`}
+                src={`https://ec-ojute.vercel.app/uploads/${bag.image}`}
                 alt={bag.name}
                 className="w-full h-48 object-cover"
               />
