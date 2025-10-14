@@ -17,7 +17,7 @@ function Login() {
       password: data.password,
     };
     await axios
-      .post("http://localhost:5000/user/login", userInfo)
+      .post("ec-ojute.vercel.app/user/login", userInfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {

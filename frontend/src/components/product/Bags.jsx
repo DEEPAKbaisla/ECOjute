@@ -9,7 +9,7 @@ const BagList = () => {
   useEffect(() => {
     const fetchBags = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/bags");
+        const response = await axios.get("ec-ojute.vercel.app/bags");
         if (response.data.success) {
           setBags(response.data.data);
         }
@@ -55,7 +55,7 @@ const BagList = () => {
               key={bag._id}
               className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
               <img
-                src={`http://localhost:5000/uploads/${bag.image}`}
+                src={`ec-ojute.vercel.app/uploads/${bag.image}`}
                 alt={bag.name}
                 className="w-full h-48 object-cover"
               />

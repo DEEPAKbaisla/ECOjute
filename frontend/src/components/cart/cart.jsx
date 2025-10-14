@@ -23,7 +23,7 @@ const Cart = () => {
                 className="flex justify-between items-center bg-white shadow-md p-4 mb-3 rounded-lg">
                 <div className="flex items-center gap-4">
                   <img
-                    src={`http://localhost:5000/uploads/${item.image}`}
+                    src={`ec-ojute.vercel.app/uploads/${item.image}`}
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded-lg"
                   />

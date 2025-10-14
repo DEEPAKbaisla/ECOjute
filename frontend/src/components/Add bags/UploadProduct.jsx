@@ -44,7 +44,7 @@ const UploadProduct = () => {
       });
 
       const res = await axios.post(
-        "http://localhost:5000/bags/add-bag",
+        "ec-ojute.vercel.app/bags/add-bag",
         formData,
         {
           headers: {

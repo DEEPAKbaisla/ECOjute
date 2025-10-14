@@ -4,10 +4,9 @@ import { Leaf, Recycle, Heart } from "lucide-react";
 function Details() {
   return (
     <div className="min-h-screen bg-background">
-      {/* <Navbar />
-      <Hero /> */}
+      
 
-      {/* Features Section */}
+      
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">
