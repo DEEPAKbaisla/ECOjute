@@ -43,7 +43,7 @@ const BagList = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-100 py-10 dark:bg-gray-900 dark:text-white mt-10">
+      <div className="min-h-screen bg-gray-100 py-10 dark:bg-gray-800 dark:text-white mt-10">
         <h1 className="text-4xl font-bold mb-4 px-10">Our Products</h1>
         <p className="text-lg text-muted-foreground px-10 mb-8">
           Browse our collection of sustainable jute products

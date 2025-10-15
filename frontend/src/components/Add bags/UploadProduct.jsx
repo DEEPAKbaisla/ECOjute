@@ -75,101 +75,101 @@ const UploadProduct = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="max-w-2xl mx-auto mt-10 bg-white p-8 shadow-md rounded-xl dark:bg-gray-800 dark:text-white h-full">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-5 text-center">
-        Upload New Bag
-      </h2>
+      <Navbar />
+      <div className="max-w-2xl mx-auto mt-10 bg-white p-8 shadow-md rounded-xl dark:bg-gray-800 dark:text-white h-screen pb-20">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-5 text-center">
+          Upload New Bag
+        </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block font-medium mb-1">Bag Name *</label>
-          <input
-            type="text"
-            name="name"
-            value={data.name}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Enter bag name"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={data.description}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            rows="3"
-            placeholder="Enter description"></textarea>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block font-medium mb-1">Price *</label>
+            <label className="block font-medium mb-1">Bag Name *</label>
             <input
-              type="number"
-              name="price"
-              value={data.price}
+              type="text"
+              name="name"
+              value={data.name}
               onChange={handleChange}
               className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter price"
+              placeholder="Enter bag name"
             />
           </div>
 
           <div>
-            <label className="block font-medium mb-1">Stock</label>
-            <input
-              type="number"
-              name="stock"
-              value={data.stock}
+            <label className="block font-medium mb-1">Description</label>
+            <textarea
+              name="description"
+              value={data.description}
               onChange={handleChange}
               className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Available quantity"
-            />
+              rows="3"
+              placeholder="Enter description"></textarea>
           </div>
-        </div>
 
-        <div>
-          <label className="block font-medium mb-1">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={data.category}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="E.g. Travel, Laptop, School"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Upload Image *</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full border rounded-md px-3 py-2 bg-gray-50 dark:bg-gray-800"
-          />
-
-          {preview && (
-            <div className="mt-3">
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-40 h-40 object-cover rounded-md shadow-sm"
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium mb-1">Price *</label>
+              <input
+                type="number"
+                name="price"
+                value={data.price}
+                onChange={handleChange}
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+                placeholder="Enter price"
               />
             </div>
-          )}
-        </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-          Upload Bag
-        </button>
-      </form>
-    </div>
+            <div>
+              <label className="block font-medium mb-1">Stock</label>
+              <input
+                type="number"
+                name="stock"
+                value={data.stock}
+                onChange={handleChange}
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+                placeholder="Available quantity"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">Category</label>
+            <input
+              type="text"
+              name="category"
+              value={data.category}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="E.g. Travel, Laptop, School"
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">Upload Image *</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full border rounded-md px-3 py-2 bg-gray-50 dark:bg-gray-800"
+            />
+
+            {preview && (
+              <div className="mt-3">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-40 h-40 object-cover rounded-md shadow-sm"
+                />
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+            Upload Bag
+          </button>
+        </form>
+      </div>
     </>
   );
 };
