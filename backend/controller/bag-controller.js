@@ -28,17 +28,19 @@
 //   }
 // };
 
-
 import { bag } from "../models/bag-model.js";
-import { uploadCloud} from "../utils/Cloud.js";
+import { uploadCloud } from "../utils/Cloud.js";
 
 export const addBag = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+     const { name, description, price, category, stock } = req.body;
     const imageFile = req.file; // multer adds this
 
     if (!name || !price || !imageFile) {
-      return res.json({ success: false, message: "Name, price, and image required!" });
+      return res.json({
+        success: false,
+        message: "Name, price, and image required!",
+      });
     }
 
     // Upload image buffer to Cloudinary
@@ -65,7 +67,6 @@ export const addBag = async (req, res) => {
     res.status(500).json({ success: false, message: "Upload failed!", error });
   }
 };
-
 
 export const getAllBags = async (req, res) => {
   try {
