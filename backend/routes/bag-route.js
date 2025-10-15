@@ -1,6 +1,7 @@
 import express from "express";
 import { addBag, getAllBags } from "../controller/bag-controller.js";
-import { upload } from "../middleware/multer.js";
+
+import {upload} from '../config/multer.js'
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 // routes/cartRoute.js
 import express from "express";
 import { Cart } from "../models/cart-model.js";
-// import { auth } from "../middleware/multer.js";
+
 
 const router = express.Router();
 
