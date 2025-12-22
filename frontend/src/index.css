@@ -9,7 +9,25 @@
   logs: true;
 }
 
+html,
+body {
+  min-height: 100%;
+}
 
+/* Light mode */
+body {
+  background-color: white;
+}
+
+/* Dark mode */
+.dark body {
+  background-color: #0f1c2e;
+}
+
+/* iOS safe area fix */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
 
 

@@ -5,7 +5,7 @@ import Details from "../Details";
 
 function Home() {
   return (
-    <div>
+    <div className="min-h-[100dvh] bg-transparent safe-bottom">
       <Navbar />
       <Banner />
       <Details />
