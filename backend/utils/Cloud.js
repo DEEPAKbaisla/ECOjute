@@ -7,7 +7,7 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
-console.log( 'here name ',process.env.CLOUD_NAME);
+// console.log( 'here name ',process.env.CLOUD_NAME);
 
 export const uploadCloud = async (image) => {
   const buffer = image?.buffer || Buffer.from(await image.arrayBuffer());

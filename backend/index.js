@@ -10,12 +10,37 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
 
+// app.use(
+//   cors({
+//     origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL, 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-}));
+const allowedOrigins =
+  process.env.NODE_ENV === "development"
+    ? ["http://localhost:5173"]
+    : ["https://ec-ojute-9nt6.vercel.app"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow server-to-server & Postman
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(
+          new Error(`CORS blocked for origin: ${origin}`)
+        );
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
