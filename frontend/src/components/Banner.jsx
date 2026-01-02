@@ -11,7 +11,8 @@ function Banner() {
         whileInView={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
         viewport={{ once: false }}>
-        <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10">
+          
+        <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10 py-6">
           <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
             <div className="space-y-8">
               <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
@@ -23,7 +24,7 @@ function Banner() {
                 Beautiful, durable, and kind to our planet.
               </p>
             </div>
-            <a href="/product" className="btn mt-6 text-white bg-green-700">
+            <a href="/products" className="btn mt-6 text-white bg-green-700">
               Buy Now
             </a>
           </div>

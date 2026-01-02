@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 import Navbar from "../Navbar";
+import api from "../../api/axios";
 
 const UploadProduct = () => {
   const [data, setData] = useState({
@@ -43,8 +43,7 @@ const UploadProduct = () => {
         formData.append(key, value);
       });
 
-      const res = await axios.post(
-        "https://ec-ojute.vercel.app/api/bags/add-bag",
+      const res = await api.post("/api/bags/add-bag",
         formData,
         {
           headers: {

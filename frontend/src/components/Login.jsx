@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 function Login() {
   const {
@@ -16,8 +16,8 @@ function Login() {
       email: data.email,
       password: data.password,
     };
-    await axios
-      .post("https://ec-ojute.vercel.app/api/user/login", userInfo)
+    await api
+      .post("/api/user/login", userInfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {

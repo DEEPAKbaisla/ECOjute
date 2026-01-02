@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import Navbar from "../Navbar";
 import toast from "react-hot-toast";
+import api from "../../api/axios";
 
 const BagList = () => {
   const [bags, setBags] = useState([]);
@@ -9,7 +10,7 @@ const BagList = () => {
   useEffect(() => {
     const fetchBags = async () => {
       try {
-        const response = await axios.get("https://ec-ojute.vercel.app/api/bags");
+        const response = await api.get("/api/bags");
         if (response.data.success) {
           setBags(response.data.data);
         }
