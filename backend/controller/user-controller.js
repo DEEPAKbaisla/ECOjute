@@ -4,7 +4,9 @@ import bcrypt from "bcrypt";
 export const signup = async (req, res) => {
   try {
     const { fullname, email, password } = req.body;
+
     const exists = await User.findOne({ email });
+
     if (exists) {
       return res.status(400).json({ message: "user already exicts" });
     }
@@ -34,6 +36,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     const match = await bcrypt.compare(password, user.password);
     if (!user || !match) {
       return res.status(400).json({ message: "something went wrong" });
@@ -53,3 +56,4 @@ export const login = async (req, res) => {
     return res.status(400).json({ message: "something went wrong in login" });
   }
 };
+

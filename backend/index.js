@@ -10,14 +10,16 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
 
-app.use(
-  cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-app.use(cors());
+
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://ec-ojute-9nt6.vercel.app"
+  ],
+}));
+
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
