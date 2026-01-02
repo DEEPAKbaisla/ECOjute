@@ -9,7 +9,6 @@ import { useAuth } from "./context/AuthProvider";
 import UploadProduct from "./components/Add bags/UploadProduct";
 import BagList from "./components/product/Bags";
 import Cart from "./components/cart/cart";
-import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   const [authUser, setAuthUser] = useAuth();
@@ -35,10 +34,8 @@ function App() {
           path="/cart"
           element={authUser ? <Cart /> : <Navigate to="/signup" />}
         />
-        <Route 
-          path="/checkout"
-          element={authUser ? <CheckoutPage /> : <Navigate to="/signup" />}
-        />
+        
+      
       </Routes>
       <Toaster/>
     </>
