@@ -1,32 +1,3 @@
-// import {bag }from "../models/bag-model.js";
-// import {uploadCloud} from '../utils/Cloud.js'
-
-// export const addBag = async (req, res) => {
-//   try {
-//     const { name, description, price, category, stock } = req.body;
-//     const image = req.file ? req.file.filename : null;
-
-//     if (!name || !price || !image) {
-//       return res.json({ success: false, message: "Name, price, and image required!" });
-//     }
-
-//     const newBag = new bag({
-//       name,
-//       description,
-//       price,
-//       category,
-//       stock,
-//       image,
-//     });
-
-//     await newBag.save();
-
-//     res.json({ success: true, message: "Bag uploaded successfully!", bag: newBag });
-//   } catch (error) {
-//     console.error(error);
-//     res.json({ success: false, message: "Upload failed!", error });
-//   }
-// };
 
 import { bag } from "../models/bag-model.js";
 import { uploadCloud } from "../utils/Cloud.js";

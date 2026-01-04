@@ -49,9 +49,6 @@ function Navbar() {
           <a href="/cart">cart</a>
         </li>
       )}
-      {/* <li>
-        <a href="">account</a>
-      </li> */}
       {authUser && authUser.role === "ADMIN" && (
         <li>
           <a href="/UploadProduct">Add bag</a>
@@ -90,7 +87,7 @@ function Navbar() {
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow  rounded-box w-52  bg-white text-gray-800 dark:bg-slate-800 dark:text-white  ">
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-5 shadow text-[40px] rounded-box w-56 h-32  bg-white text-gray-800 dark:bg-slate-800 dark:text-white font-mono ">
                 {navItems}
               </ul>
               {/* bg-base-100 */}

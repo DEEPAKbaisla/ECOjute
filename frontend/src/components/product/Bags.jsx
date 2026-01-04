@@ -6,6 +6,7 @@ import api from "../../api/axios";
 
 const BagList = () => {
   const [bags, setBags] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBags = async () => {
@@ -16,6 +17,8 @@ const BagList = () => {
         }
       } catch (error) {
         console.log("Error fetching bags:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchBags();
@@ -51,6 +54,12 @@ const BagList = () => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 dark:bg-gray-800  ">
+          {loading && (
+            <div className="flex justify-center items-center h-64">
+              <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+          
           {bags.map((bag) => (
             <div
               key={bag._id}
@@ -58,20 +67,29 @@ const BagList = () => {
               <img
                 src={bag.image}
                 alt={bag.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-contain"
               />
               <div className="p-4">
                 <h2 className="text-lg font-semibold text-black">{bag.name}</h2>
                 <p className="text-gray-500 text-sm">{bag.category}</p>
-                <p className="text-gray-800 font-bold mt-2">₹{bag.price}</p>
+                <div className="flex gap-2 flex-col">
+                  <p className="text-gray-800 font-bold mt-2">₹{bag.price}</p>
+                  <button
+                    onClick={() => {
+                      addToCart(bag);
+                    }}
+                    className="bg-green-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-green-600 transition-all ">
+                    Add to Cart
+                  </button>
+                </div>
 
-                <button
+                {/* <button
                   onClick={() => {
                     addToCart(bag);
                   }}
                   className="bg-green-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-green-600 transition-all ">
                   Add to Cart
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

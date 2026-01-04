@@ -1,14 +1,3 @@
-// import mongoose from "mongoose";
-
-// const bagSchema =mongoose.Schema({
-//     name:String,
-//     price:Number,
-//     category:String,
-//     image:String,
-//     title:String,
-// })
-
-// export const bag =mongoose.model('bag',bagSchema)
 
 import mongoose from "mongoose";
 
@@ -24,8 +13,8 @@ const bagSchema = new mongoose.Schema({
   },
   category: String,
   stock: {
-    type: Number,
-    default: 0,
+    type: Boolean,
+    default: true,
   },
   image: {
     type: String, // store URL or filename

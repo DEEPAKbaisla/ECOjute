@@ -36,10 +36,13 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "user does not exist" });
+    }
 
     const match = await bcrypt.compare(password, user.password);
-    if (!user || !match) {
-      return res.status(400).json({ message: "something went wrong" });
+    if (!match) {
+      return res.status(400).json({ message: "invalid credentials" });
     } else {
       res.status(200).json({
         message: "login successfully",
@@ -52,8 +55,7 @@ export const login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log('ye aara ha ' ,error.message);
-    return res.status(400).json({ message: "something went wrong in login" });
+    
+    return res.status(400).json({ message: "something went wrong sorry" });
   }
 };
-
