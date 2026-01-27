@@ -15,7 +15,7 @@ function Banner() {
               Beautiful, durable, and kind to our planet.
             </p>
           </div>
-          <a href="/product" className="btn mt-6 text-white bg-green-700">
+          <a href="/products" className="btn mt-6 text-white bg-green-700">
             Buy Now
           </a>
         </div>
