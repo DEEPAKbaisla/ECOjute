@@ -1,8 +1,8 @@
-
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const GoogleSignIn = () => {
   const { authUser, setAuthUser } = useAuth();
@@ -11,10 +11,10 @@ const GoogleSignIn = () => {
   const handleSuccess = async (credentialResponse) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/user/google-login",
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/google-login`,
         {
           token: credentialResponse.credential,
-        }
+        },
       );
 
       // Save token
@@ -26,11 +26,10 @@ const GoogleSignIn = () => {
       // Update context state
       setAuthUser(res.data.user);
 
-      console.log("Login successful");
+      toast.success("Login successful");
 
       // Redirect
       navigate("/");
-
     } catch (err) {
       console.log(err);
     }

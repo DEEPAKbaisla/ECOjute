@@ -108,7 +108,7 @@ export const googleLogin = async (req, res) => {
       { expiresIn: "7d" },
     );
 
-    console.log( "aaay", authToken, user);
+    // console.log( "aaay", authToken, user);
     return res.status(200).json({
       success: true,
       token: authToken,
