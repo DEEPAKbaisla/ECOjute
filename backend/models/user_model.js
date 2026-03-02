@@ -13,7 +13,17 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId;
+      },
+    },
+    googleId: {
+      type: String,
+      default: null,
+    },
+    profilePic: {
+      type: String,
+      default: null,
     },
     cart: [
       {
@@ -31,7 +41,7 @@ const userSchema = mongoose.Schema(
       default: null,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const User = mongoose.model("user", userSchema);

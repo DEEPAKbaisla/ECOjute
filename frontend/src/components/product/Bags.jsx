@@ -71,7 +71,7 @@ const BagList = () => {
               />
               <div className="p-4">
                 <h2 className="text-lg font-semibold text-black">{bag.name}</h2>
-                <p className="text-gray-500 text-sm">{bag.category}</p>
+                 <p className="text-gray-500 text-sm">{bag.category}</p>
                 <div className="flex gap-2 flex-col">
                   <p className="text-gray-800 font-bold mt-2">₹{bag.price}</p>
                   <button

@@ -11,8 +11,8 @@ import BagList from "./components/product/Bags";
 import Cart from "./components/cart/cart";
 
 function App() {
-  const [authUser, setAuthUser] = useAuth();
-  // console.log(authUser);
+  const { authUser, setAuthUser } = useAuth();
+  
   return (
     <>
       <Routes>
