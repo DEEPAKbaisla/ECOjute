@@ -63,10 +63,10 @@ const Cart = () => {
     <>
       <Navbar />
       <div className="p-10 min-h-screen bg-gray-50 mt-12 dark:bg-gray-800 dark:text-white">
-        <h1 className="text-3xl font-bold mb-6">🛒 Your Cart</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center mt-10">🛒 Your Cart</h1>
 
         {cart.length === 0 ? (
-          <p className="text-gray-600">Your cart is empty..</p>
+          <p className="text-gray-600 text-center">Your cart is empty..</p>
         ) : (
           <>
             {cart.map(

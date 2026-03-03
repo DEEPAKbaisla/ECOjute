@@ -5,13 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
+// console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <BrowserRouter>
       <CartProvider>
         <AuthProvider>
-          <div className=" dark:bg-slate-800 dark:text-white ">
+          <div className=" dark:bg-green-800/70 dark:text-white ">
             <App />
           </div>
         </AuthProvider>

@@ -55,8 +55,8 @@ const BagList = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 dark:bg-gray-800  ">
           {loading && (
-            <div className="flex justify-center items-center h-64">
-              <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="flex justify-center items-center ">
+              <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin text-center"></div>
             </div>
           )}
           
@@ -65,7 +65,7 @@ const BagList = () => {
               key={bag._id}
               className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
               <img
-                src={bag.image}
+                src={bag.images[0]}
                 alt={bag.name}
                 className="w-full h-48 object-contain"
               />

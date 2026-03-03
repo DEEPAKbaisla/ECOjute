@@ -1,4 +1,6 @@
 import React from "react";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 function Banner() {
   return (
@@ -15,9 +17,11 @@ function Banner() {
               Beautiful, durable, and kind to our planet.
             </p>
           </div>
-          <a href="/products" className="btn mt-6 text-white bg-green-700">
-            Buy Now
-          </a>
+          <Button asChild className="mt-6 bg-green-700 hover:bg-green-800 text-white">
+  <Link to="/products">
+    Buy Now
+  </Link>
+</Button>
         </div>
         <div className=" order-1 w-full mt-20 md:w-1/2 ">
           <img
