@@ -1,5 +1,6 @@
 import { bag } from "../models/bag-model.js";
 import { uploadCloud } from "../utils/Cloud.js";
+import mongoose from "mongoose";
 
 
 export const addBag = async (req, res) => {
@@ -150,6 +151,37 @@ export const deleteBag = async (req, res) => {
       success: false,
       message: "Delete failed",
       error,
+    });
+  }
+};
+
+export const getBagById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid bag ID",
+  });}
+
+    const singleBag = await bag.findById(id);
+
+    if (!singleBag) {
+      return res.status(404).json({
+        success: false,
+        message: "Bag not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      bag: singleBag,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching bag",
+      error: error.message,
     });
   }
 };
