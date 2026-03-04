@@ -35,6 +35,7 @@ function Login() {
       toast.success("Login Successfully");
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
 
       setTimeout(() => {
         // window.location.reload();

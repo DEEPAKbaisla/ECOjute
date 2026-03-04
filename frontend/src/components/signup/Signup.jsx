@@ -145,6 +145,7 @@ function Signup() {
 
       toast.success("Signup successfully 🎉");
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
       setRedirect(true);
       Navigate("/");
     } catch (err) {

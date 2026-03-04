@@ -121,10 +121,17 @@ const AddBag = () => {
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (key === "images") {
+          // Append each file individually under the 'images' field
+          Array.from(value).forEach((file) => {
+            formData.append("images", file);
+          });
+        } else {
+          formData.append(key, value);
+        }
       });
 
-      const res = await api.post("/api/bags/add-bag",
+      const res = await api.post("/api/bags",
         formData,
         {
           headers: {
