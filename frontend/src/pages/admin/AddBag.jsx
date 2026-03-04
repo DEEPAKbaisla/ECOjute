@@ -87,35 +87,69 @@ const AddBag = () => {
       return;
     }
 
+    // try {
+    //   const formData = new FormData();
+    //   // Append scalar fields
+    //   formData.append("name", data.name);
+    //   formData.append("description", data.description);
+    //   formData.append("price", data.price);
+    //   formData.append("category", data.category);
+    //   formData.append("stock", data.stock);
+
+    //   // Append images with field name "images" to match backend
+    //   data.images.forEach((file) => {
+    //     formData.append("images", file);
+    //   });
+
+    //   const res = await api.post("/api/bags", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   });
+
+    //   if (res.data.success) {
+    //     toast.success("Bag uploaded successfully!");
+    //     navigate("/admin/manage-bags");
+    //   } else {
+    //     toast.error(res.data.message || "Something went wrong!");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   toast.error("Upload failed");
+    // }
+
     try {
       const formData = new FormData();
-      // Append scalar fields
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("price", data.price);
-      formData.append("category", data.category);
-      formData.append("stock", data.stock);
-
-      // Append images with field name "images" to match backend
-      data.images.forEach((file) => {
-        formData.append("images", file);
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
       });
 
-      const res = await api.post("/api/bags", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await api.post("/api/bags/add-bag",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (res.data.success) {
         toast.success("Bag uploaded successfully!");
-        navigate("/admin/manage-bags");
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+          stock: "",
+          image: "",
+        });
+        setPreview(null);
       } else {
         toast.error(res.data.message || "Something went wrong!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Upload failed");
+      toast.error("Upload failed..");
     }
   };
 

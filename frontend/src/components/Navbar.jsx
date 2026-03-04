@@ -55,7 +55,7 @@ function Navbar() {
           {authUser?.role === "USER" && (
             <Link
               to="/cart"
-              className="relative hidden h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary md:flex"
+              className="relative h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary flex"
             >
               <ShoppingCart className="h-5 w-5" />
 

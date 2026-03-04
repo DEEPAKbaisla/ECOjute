@@ -16,6 +16,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import AddBag from "./pages/admin/AddBag";
 import ManageBags from "./pages/admin/ManageBags";
 import EditBag from "./pages/admin/EditBag";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   const { authUser, setAuthUser } = useAuth();
@@ -43,6 +44,7 @@ function App() {
           element={authUser ? <Cart /> : <Navigate to="/signup" />}
         />
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="add-bag" element={<AddBag />} />
           <Route path="manage-bags" element={<ManageBags />} />

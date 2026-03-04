@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../Navbar";
@@ -17,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } =
@@ -94,7 +94,28 @@ const Cart = () => {
           <h1 className="text-2xl font-bold">Your Cart</h1>
 
           {cart.length === 0 ? (
-            <p className="text-muted-foreground">Cart is empty</p>
+            <div className="flex justify-center py-20">
+    <Card className="w-full max-w-md text-center">
+      <CardContent className="flex flex-col items-center gap-4 p-8">
+
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+          <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+        </div>
+
+        <h2 className="text-xl font-semibold">Your cart is empty</h2>
+
+        <p className="text-sm text-muted-foreground">
+          Looks like you haven’t added any bags yet. Start shopping to fill it up.
+        </p>
+
+        <Button asChild>
+          <Link to="/products">Continue Shopping</Link>
+        </Button>
+
+      </CardContent>
+    </Card>
+  </div>
+
           ) : (
             cart.map((item) => (
               <Card key={item._id}>

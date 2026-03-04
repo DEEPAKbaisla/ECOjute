@@ -10,23 +10,29 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
-app.use(cookieParser());
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
 
-// app.use(
-//   cors({
-//     origin: ["http://localhost:5173", "https://ec-ojute-9nt6.vercel.app"],
-   
-//   })
-// );
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ec-ojute-9nt6.vercel.app"
+];
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://ec-ojute-9nt6.vercel.app"],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
+app.use(cookieParser());
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
