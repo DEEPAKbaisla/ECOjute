@@ -122,10 +122,12 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import GoogleSignIn from "../GoogleSignIn";
-
+import api from "@/api/axios";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -135,18 +137,16 @@ function Signup() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        "https://ec-ojute.vercel.app/api/user/signup",
-        {
-          fullname: data.fullname,
-          email: data.email,
-          password: data.password,
-        }
-      );
+      const res = await api.post("/api/user/signup", {
+        fullname: data.fullname,
+        email: data.email,
+        password: data.password,
+      });
 
       toast.success("Signup successfully 🎉");
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setRedirect(true);
+      Navigate("/");
     } catch (err) {
       if (err.response) {
         toast.error(err.response.data.message);
@@ -163,14 +163,11 @@ function Signup() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create your account</CardTitle>
-          <CardDescription>
-            Enter your details to get started
-          </CardDescription>
+          <CardDescription>Enter your details to get started</CardDescription>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            
             <div>
               <Input
                 type="text"
@@ -191,9 +188,7 @@ function Signup() {
                 {...register("email", { required: true })}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  Email is required
-                </p>
+                <p className="text-red-500 text-sm mt-1">Email is required</p>
               )}
             </div>
 
@@ -213,20 +208,17 @@ function Signup() {
             <Button type="submit" className="w-full">
               Create My Account
             </Button>
-            <GoogleSignIn/>
+            <GoogleSignIn />
 
             <div className="text-center text-sm">
               Already have an account?{" "}
-               <Link to="/login" className="underline text-blue-600">
+              <Link to="/login" className="underline text-blue-600">
                 Login
               </Link>
             </div>
-
           </form>
         </CardContent>
       </Card>
-
-      
     </div>
   );
 }

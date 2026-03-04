@@ -1,53 +1,78 @@
 
-import React from "react";
+
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../Navbar";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
 
-const Cart = () => {
-  const { cart, removeFromCart, clearCart } = useCart();
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+const Cart = () => {
+  const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } =
+    useCart();
+
+  const [address, setAddress] = useState({
+    name: "",
+    phone: "",
+    addressLine: "",
+    city: "",
+    pincode: "",
+  });
+
+  const total = getCartTotal();
 
   const handlePayment = async () => {
+    if (!address.name || !address.phone || !address.addressLine) {
+      toast.error("Please fill address details");
+      return;
+    }
+
     try {
-      const { data: order } = await api.post("/api/payment/create-order", {
-        amount: total,
-      });
+      // 1️⃣ Create Order in backend (with cart + address)
+      const { data: orderData } = await api.post(
+        "/api/orders/create",
+        {
+          cart,
+          address,
+          amount: total,
+        }
+      );
 
-      // console.log("ORDER FROM BACKEND:", order);
-
-      if (!order || !order.id) {
-        alert("Order ID missing");
-        return;
-      }
+      const razorpayOrder = orderData.razorpayOrder;
 
       const options = {
         key: "rzp_live_RzU78pJrxasGQV",
-        amount: order.amount,
-        currency: order.currency,
-        name: "Eco jute",
-        description: "UPI Payment",
-        order_id: order.id,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "Eco Jute",
+        order_id: razorpayOrder.id,
 
         handler: async function (response) {
-          console.log("PAYMENT RESPONSE:", response);
-
-          const verifyRes = await api.post("/api/payment/verify", response);
-
-          console.log("VERIFY RESPONSE:", verifyRes.data);
+          const verifyRes = await api.post(
+            "/api/orders/verify-payment",
+            {
+              ...response,
+              orderId: orderData.orderId,
+            }
+          );
 
           if (verifyRes.data.success) {
-            alert("✅ Payment Successful");
+            toast.success("Payment Successful 🎉");
             clearCart();
           } else {
-            alert("❌ Payment Verification Failed");
+            toast.error("Payment verification failed");
           }
-        },
-
-        theme: {
-          color: "#16a34a",
         },
       };
 
@@ -62,53 +87,129 @@ const Cart = () => {
   return (
     <>
       <Navbar />
-      <div className="p-10 min-h-screen bg-gray-50 mt-12 dark:bg-gray-800 dark:text-white">
-        <h1 className="text-3xl font-bold mb-6 text-center mt-10">🛒 Your Cart</h1>
 
-        {cart.length === 0 ? (
-          <p className="text-gray-600 text-center">Your cart is empty..</p>
-        ) : (
-          <>
-            {cart.map(
-              (item) => (
-                (
-                  <div
-                    key={item._id}
-                    className="flex justify-between items-center bg-white shadow-md p-4 mb-3 rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
+      <div className="max-w-6xl mx-auto p-6 mt-16 grid md:grid-cols-3 gap-6">
+        {/* LEFT - CART ITEMS */}
+        <div className="md:col-span-2 space-y-4">
+          <h1 className="text-2xl font-bold">Your Cart</h1>
 
-                      <div>
-                        <h2 className="font-semibold">{item.name}</h2>
-                        <p className="text-gray-500">₹{item.price}</p>
-                        <p className="text-sm text-gray-400">
-                          Qty: {item.quantity}
-                        </p>
+          {cart.length === 0 ? (
+            <p className="text-muted-foreground">Cart is empty</p>
+          ) : (
+            cart.map((item) => (
+              <Card key={item._id}>
+                <CardContent className="flex justify-between items-center p-4">
+                  <div className="flex gap-4 items-center">
+                    <img
+                      src={item.images?.[0]}
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded-md"
+                    />
+
+                    <div>
+                      <h2 className="font-semibold">{item.name}</h2>
+                      <p className="text-muted-foreground">
+                        ₹{item.price}
+                      </p>
+
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            updateQuantity(item._id, -1)
+                          }
+                        >
+                          -
+                        </Button>
+
+                        <span>{item.quantity}</span>
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            updateQuantity(item._id, 1)
+                          }
+                        >
+                          +
+                        </Button>
                       </div>
                     </div>
-                    <button
-                      onClick={() => removeFromCart(item._id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600">
-                      Remove
-                    </button>
                   </div>
-                )
-              )
-            )}
-            <div className="text-right mt-5">
-              <p className="text-xl font-bold">Total: ₹{total}</p>
-              <button
-                onClick={handlePayment}
-                className="mt-3 bg-gray-800 text-white px-5 py-2 rounded-lg hover:bg-gray-900">
-                Make payment
-              </button>
+
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => removeFromCart(item._id)}
+                    className="px-3"
+                  >
+                    Remove
+                  </Button>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+
+        {/* RIGHT - ADDRESS + PAYMENT */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Delivery Address</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+            <Input
+              placeholder="Full Name"
+              onChange={(e) =>
+                setAddress({ ...address, name: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Phone Number"
+              onChange={(e) =>
+                setAddress({ ...address, phone: e.target.value })
+              }
+            />
+            <Textarea
+              placeholder="Full Address"
+              onChange={(e) =>
+                setAddress({
+                  ...address,
+                  addressLine: e.target.value,
+                })
+              }
+            />
+            <Input
+              placeholder="City"
+              onChange={(e) =>
+                setAddress({ ...address, city: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Pincode"
+              onChange={(e) =>
+                setAddress({
+                  ...address,
+                  pincode: e.target.value,
+                })
+              }
+            />
+
+            <Separator />
+
+            <div className="flex justify-between font-semibold">
+              <span>Total</span>
+              <span>₹{total}</span>
             </div>
-          </>
-        )}
+          </CardContent>
+
+          <CardFooter>
+            <Button className="w-full" onClick={handlePayment}>
+              Proceed to Payment
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </>
   );

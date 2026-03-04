@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Leaf, Recycle, Heart } from "lucide-react";
 import { motion } from "motion/react";
+import { Button } from "./ui/button";
 function Details() {
   
   return (
@@ -61,11 +62,11 @@ function Details() {
               bag at a time
             </p>
             <Link to="/products">
-              <button
+              <Button
                 size="lg"
-                className="text-white text-lg p-4 bg-green-700 rounded-2xl">
+                className="text-white text-lg p-4 bg-green-700 rounded-2xl cursor-pointer hover:bg-green-800 transition-colors">
                 Shop Collection
-              </button>
+              </Button>
             </Link>
           </div>
         </section>

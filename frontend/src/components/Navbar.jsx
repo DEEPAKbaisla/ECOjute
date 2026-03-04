@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import Logout from "./Logout";
-import { LayoutDashboard } from "lucide-react";
-
+import { LayoutDashboard, Moon, ShoppingCart, Sun } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { Button } from "@/components/ui/button";
 
 function Navbar() {
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
   const { authUser } = useAuth();
+
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || "light"
+    () => localStorage.getItem("theme") || "light",
   );
 
   useEffect(() => {
@@ -17,52 +22,84 @@ function Navbar() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 border-b bg-white dark:bg-slate-900 dark:text-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        
+    <div className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
-        <a href="/" className="text-2xl font-bold text-green-700">
+        <a
+          href="/"
+          className="text-2xl font-bold text-primary hover:text-primary/90"
+        >
           EcoJute
         </a>
 
         {/* Links */}
-        <div className="flex items-center gap-6">
-          <a href="/" className="hover:text-green-600 hidden lg:block">Home</a>
-          <a href="/products" className="hover:text-green-600 hidden lg:block">Products</a>
+        <div className="flex items-center gap-4 md:gap-6">
+          <a
+            href="/"
+            className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
+          >
+            Home
+          </a>
+          <a
+            href="/products"
+            className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
+          >
+            Products
+          </a>
 
           {authUser?.role === "USER" && (
-            <a className="hidden lg:flex border rounded-full h-10 w-10 items-center justify-center hover:rotate-12" href="/cart">🛒</a>
+            <Link
+              to="/cart"
+              className="relative hidden h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary md:flex"
+            >
+              <ShoppingCart className="h-5 w-5" />
+
+              {cartCount > 0 && (
+                <span className="absolute -right-2 -top-2 rounded-full bg-destructive px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
           )}
 
           {authUser?.role === "ADMIN" && (
-            <a className="hidden lg:block" href="/UploadProduct"><LayoutDashboard/></a>
+            <a
+              className="hidden text-foreground/80 transition-colors hover:text-primary md:block"
+              href="/admin"
+            >
+              <LayoutDashboard className="h-5 w-5" />
+            </a>
           )}
 
           {/* Theme Toggle */}
-          <button 
-            onClick={() =>
-              setTheme(theme === "light" ? "dark" : "light")
-            }
-            className="border px-3 py-1 rounded-md "
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="border-border text-foreground/80 hover:border-primary hover:bg-accent hover:text-accent-foreground"
+            aria-label="Toggle theme"
           >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </Button>
 
           {authUser ? (
-            <Logout/>
+            <Logout />
           ) : (
-            <button>
-            
-             <Link to="/login" className="bg-green-700 text-white px-3 py-2 rounded-md hover:bg-green-800 duration-300">
-                Login
-              </Link>
-            
-            
-            </button>
+            <Button variant="default" size="sm" asChild>
+              <Link to="/login">Login</Link>
+            </Button>
           )}
         </div>
-       
       </div>
     </div>
   );

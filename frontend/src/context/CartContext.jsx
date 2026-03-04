@@ -1,53 +1,85 @@
+
 import React, { createContext, useState, useEffect, useContext } from "react";
 
-// Create context
 const CartContext = createContext();
 
-// Cart Provider
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    // load cart from localStorage if available
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // whenever cart changes, save it to localStorage
+  // Sync localStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Add to Cart function
+  // ✅ Add to cart (safe update)
   const addToCart = (item) => {
-    const exists = cart.find((x) => x._id === item._id);
-    if (exists) {
-      setCart(
-        cart.map((x) =>
-          x._id === item._id ? { ...x, quantity: x.quantity + 1 } : x
-        )
-      );
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
+    setCart((prevCart) => {
+      const exists = prevCart.find((x) => x._id === item._id);
+
+      if (exists) {
+        return prevCart.map((x) =>
+          x._id === item._id
+            ? { ...x, quantity: x.quantity + 1 }
+            : x
+        );
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
   };
 
-  // Remove from cart
+  // ✅ Remove item completely
   const removeFromCart = (id) => {
-    setCart(cart.filter((x) => x._id !== id));
+    setCart((prevCart) => prevCart.filter((x) => x._id !== id));
   };
 
-  // Clear cart
+  // ✅ Increase / Decrease quantity
+  const updateQuantity = (id, amount) => {
+    setCart((prevCart) =>
+      prevCart.map((x) =>
+        x._id === id
+          ? { ...x, quantity: Math.max(1, x.quantity + amount) }
+          : x
+      )
+    );
+  };
+
+  // ✅ Clear cart
   const clearCart = () => {
     setCart([]);
   };
 
+  // ✅ Total items count (for navbar badge)
+  const getCartCount = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  // ✅ Total price
+  const getCartTotal = () => {
+    return cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        getCartCount,
+        getCartTotal,
+      }}
     >
       {children}
     </CartContext.Provider>
   );
 };
 
-// Custom hook
 export const useCart = () => useContext(CartContext);

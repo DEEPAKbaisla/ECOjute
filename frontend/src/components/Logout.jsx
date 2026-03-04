@@ -1,9 +1,11 @@
 import React from "react";
 import { useAuth } from "../context/AuthProvider";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Logout() {
   const { authUser, setAuthUser } = useAuth();
+  const navigate = useNavigate();
   const handleLogout = () => {
     try {
       setAuthUser({
@@ -14,6 +16,7 @@ function Logout() {
       toast.success("Logout successfully");
       setTimeout(() => {
         window.location.reload();
+        navigate("/");
       },2000);
     } catch (error) {
       toast.error(error.message);

@@ -1,51 +1,110 @@
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import axios from "axios";
+import api from "@/api/axios";
+import { toast } from "react-hot-toast";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
+import { Label } from "@/components/ui/label";
 
-function EditBag() {
+const EditBag = () => {
   const { id } = useParams();
-  const { register, handleSubmit, setValue } = useForm();
   const navigate = useNavigate();
+
+  const [data, setData] = useState({
+    name: "",
+    price: "",
+  });
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     const fetchBag = async () => {
-      const res = await axios.get(`/api/bags/${id}`);
-      setValue("name", res.data.name);
-      setValue("price", res.data.price);
-      setValue("image", res.data.image);
+      try {
+        const res = await api.get(`/api/bags/${id}`);
+        const bag = res.data.bag;
+        setData({
+          name: bag?.name || "",
+          price: bag?.price || "",
+        });
+        setPreview(bag?.images?.[0] || null);
+      } catch (err) {
+        toast.error("Failed to load bag");
+      }
     };
     fetchBag();
-  }, [id, setValue]);
+  }, [id]);
 
-  const onSubmit = async (data) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!data.name || !data.price) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
     try {
-      await axios.put(`/api/bags/${id}`, data);
-      toast.success("Updated successfully");
-      navigate("/admin/manage-bags");
-    } catch {
+      const res = await api.put(`/api/bags/${id}`, data);
+      if (res.data.success) {
+        toast.success("Bag updated successfully!");
+        navigate("/admin/manage-bags");
+      } else {
+        toast.error(res.data.message || "Update failed");
+      }
+    } catch (err) {
+      console.error(err);
       toast.error("Update failed");
     }
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Edit Bag</h2>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
-        <Input placeholder="Bag Name" {...register("name")} />
-        <Input placeholder="Price" {...register("price")} />
-        <Input placeholder="Image URL" {...register("image")} />
-
-        <Button type="submit" className="w-full">
-          Update Bag
-        </Button>
-      </form>
+    <div className="mx-auto max-w-full p-4 mt-10">
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Bag</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="w-full space-y-6">
+            <div className="space-y-2">
+              <Label>Bag Name *</Label>
+              <Input
+                type="text"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                placeholder="Enter bag name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Price *</Label>
+              <Input
+                type="number"
+                name="price"
+                value={data.price}
+                onChange={handleChange}
+                placeholder="Enter price"
+              />
+            </div>
+            {preview && (
+              <div className="space-y-2">
+                <Label>Current Image</Label>
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="mt-1 h-40 w-40 rounded-md border object-cover"
+                />
+              </div>
+            )}
+            <Button type="submit" className="w-full md:w-auto">
+              Update Bag
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-}
+};
 
 export default EditBag;

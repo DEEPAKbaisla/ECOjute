@@ -4,17 +4,27 @@ import bagRoute from "./routes/bag-route.js";
 import userRoute from "./routes/user-route.js";
 import cartRoute from "./routes/cart-route.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
+app.use(cookieParser());
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
+
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "https://ec-ojute-9nt6.vercel.app"],
+   
+//   })
+// );
 
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://ec-ojute-9nt6.vercel.app"],
-   
+    credentials: true,
   })
 );
 
@@ -32,6 +42,7 @@ try {
 app.use("/api/bags", bagRoute);
 app.use("/api/user", userRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/orders", orderRoutes);
 
 app.use("/api/payment", paymentRoutes);
 app.get("/", (req, res) => {

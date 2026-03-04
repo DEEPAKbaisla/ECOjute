@@ -59,46 +59,53 @@ const AddBag = () => {
     description: "",
     price: "",
     category: "",
-    stock: "",
-    image: "",
+    stock: true,
+    images: [],
   });
 
   const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setData({
+      ...data,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setData({ ...data, image: file });
-    setPreview(URL.createObjectURL(file));
+    const files = Array.from(e.target.files || []);
+    setData({ ...data, images: files });
+    setPreview(files[0] ? URL.createObjectURL(files[0]) : null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!data.name || !data.price || !data.image) {
+    if (!data.name || !data.price || data.images.length === 0) {
       toast.error("Please fill all required fields!");
       return;
     }
 
     try {
       const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
+      // Append scalar fields
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("price", data.price);
+      formData.append("category", data.category);
+      formData.append("stock", data.stock);
+
+      // Append images with field name "images" to match backend
+      data.images.forEach((file) => {
+        formData.append("images", file);
       });
 
-      const res = await api.post(
-        "/api/bags/add-bag",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await api.post("/api/bags", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (res.data.success) {
         toast.success("Bag uploaded successfully!");
@@ -113,14 +120,14 @@ const AddBag = () => {
   };
 
   return (
-    <div className="max-w-3xl mt-15 mx-auto">
-      <Card>
+    <div className="mx-auto max-w-full p-4">
+      <Card className="mt-4 md:mt-6">
         <CardHeader>
           <CardTitle>Add New Bag</CardTitle>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 w-full">
 
             {/* Name */}
             <div className="space-y-2">
@@ -146,28 +153,37 @@ const AddBag = () => {
             </div>
 
             {/* Price & Stock */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Price *</Label>
-                <Input
-                  type="number"
-                  name="price"
-                  value={data.price}
-                  onChange={handleChange}
-                  placeholder="Enter price"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Price *</Label>
+              <Input
+                type="number"
+                name="price"
+                value={data.price}
+                onChange={handleChange}
+                placeholder="Enter price"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label>Stock</Label>
-                <Input
-                  type="number"
+            <div className="space-y-2">
+              <Label>In stock</Label>
+              <div className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm">
+                <input
+                  id="stock"
+                  type="checkbox"
                   name="stock"
-                  value={data.stock}
+                  checked={data.stock}
                   onChange={handleChange}
-                  placeholder="Available quantity"
+                  className="h-4 w-4"
                 />
+                <label
+                  htmlFor="stock"
+                  className="select-none text-sm text-foreground"
+                >
+                  Available for purchase
+                </label>
               </div>
+            </div>
             </div>
 
             {/* Category */}
@@ -184,10 +200,12 @@ const AddBag = () => {
 
             {/* Image */}
             <div className="space-y-2">
-              <Label>Upload Image *</Label>
+              <Label>Upload Images *</Label>
               <Input
                 type="file"
+                name="images"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
               />
 
