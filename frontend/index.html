@@ -4,8 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image" href="/siv.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Preload LCP image with explicit webp format -->
+    <link
+      rel="preload"
+      as="image"
+      href="https://res.cloudinary.com/dxmmbkhq8/image/upload/f_webp,q_auto,w_550,h_460,c_limit/v1773333956/bag_lgm3ft.png"
+      fetchpriority="high"
+      type="image/webp"
+    />
+
     <title>EcoJute</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- defer so it doesn't block rendering -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   </head>
   <body>
     <div id="root"></div>

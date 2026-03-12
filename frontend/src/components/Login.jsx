@@ -16,6 +16,7 @@ import {
   CardTitle,
   CardDescription,
 } from "./ui/card";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function Login() {
   const {
@@ -49,7 +50,7 @@ function Login() {
   };
 
   return (
-    
+     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -109,6 +110,7 @@ function Login() {
       </CardContent>
     </Card>
   </div>
+  </GoogleOAuthProvider>
   );
 }
 

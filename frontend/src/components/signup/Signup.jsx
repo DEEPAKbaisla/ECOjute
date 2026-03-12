@@ -124,10 +124,11 @@ import {
 import GoogleSignIn from "../GoogleSignIn";
 import api from "@/api/axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function Signup() {
   const [redirect, setRedirect] = useState(false);
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
 
   const {
     register,
@@ -160,6 +161,7 @@ function Signup() {
   }
 
   return (
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <div className="flex h-screen items-center justify-center dark:bg-slate-900 p-6">
       <Card className="w-full max-w-md">
         <CardHeader>
@@ -221,6 +223,7 @@ function Signup() {
         </CardContent>
       </Card>
     </div>
+        </GoogleOAuthProvider>
   );
 }
 
