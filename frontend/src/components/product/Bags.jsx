@@ -1,5 +1,4 @@
-
-import { useEffect, useState, useCallback, memo } from "react";
+import { memo, useCallback } from "react";
 import toast from "react-hot-toast";
 import api from "@/api/axios";
 import Navbar from "../Navbar";
@@ -7,8 +6,19 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
+import { useQuery } from "@tanstack/react-query";
 
-// ✅ Extracted & memoized — won't re-render unless bag/cartItem changes
+// ✅ Fetch function — defined outside component, no re-creation on render
+const fetchBags = async ({ signal }) => {
+  const startTime = performance.now();
+  const response = await api.get("/api/bags", { signal });
+  const endTime = performance.now();
+  // console.log(`⚡ Fetch time for bags: ${endTime - startTime} ms`);
+  if (!response.data.success) throw new Error("Failed to fetch bags");
+  return response.data.data;
+};
+
+// ✅ Memoized card — only re-renders when bag/cartItem/handler changes
 const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
   <Card className="hover:shadow-lg transition-all duration-200">
     <CardContent className="p-4">
@@ -47,7 +57,7 @@ const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
   </Card>
 ));
 
-// ✅ Extracted — stable component, no re-creation on parent render
+// ✅ Stable skeleton — no props, never re-renders unnecessarily
 const SkeletonGrid = () => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {[...Array(8)].map((_, i) => (
@@ -63,25 +73,22 @@ const SkeletonGrid = () => (
 );
 
 const BagList = () => {
-  const [bags, setBags] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { cart, addToCart } = useCart();
 
-  useEffect(() => {
-    const fetchBags = async () => {
-      try {
-        const response = await api.get("/api/bags");
-        if (response.data.success) setBags(response.data.data);
-      } catch (error) {
-        console.log("Error fetching bags:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBags();
-  }, []);
+  // ✅ React Query: auto-caching, deduplication, abort, background refetch
+  const {
+    data: bags = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["bags"],
+    queryFn: fetchBags,
+    staleTime: 5 * 60 * 1000,  // serve from cache for 5 mins
+    retry: 2,                   // auto-retry twice on failure
+  });
+  
 
-  // ✅ Stable reference — prevents BagCard memo from breaking on re-render
+  // ✅ Stable reference — memo on BagCard won't break across re-renders
   const handleAddToCart = useCallback(
     (bag) => {
       addToCart(bag);
@@ -101,7 +108,13 @@ const BagList = () => {
           </p>
         </div>
 
-        {loading ? (
+        {isError && (
+          <p className="text-destructive text-center mt-10">
+            Failed to load products. Please try again.
+          </p>
+        )}
+
+        {isLoading ? (
           <SkeletonGrid />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
