@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
 
 // ✅ Fetch function — defined outside component, no re-creation on render
 const fetchBags = async ({ signal }) => {
@@ -24,7 +25,7 @@ const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
     <CardContent className="p-4">
       <img
         src={bag.images?.[0]}
-        alt={bag.name}
+        alt={`Eco friendly jute bag ${bag.name} reusable shopping bag India`}
         className="w-full h-48 object-contain rounded-md bg-gray-100"
         loading="lazy"
         width={300}
@@ -99,14 +100,29 @@ const BagList = () => {
 
   return (
     <>
+     <Helmet>
+    <title>Buy Jute Bags Online in India | EcoJute</title>
+    <meta
+      name="description"
+      content="Shop eco-friendly jute bags online in India. Durable, reusable, and sustainable bags for daily use."
+    />
+  </Helmet>
       <Navbar />
       <div className="min-h-screen bg-background py-10 px-6">
+         {/* ✅ SEO Heading */}
+    <div className="mb-10 mt-10 text-center">
+      <h1 className="text-3xl font-bold">
+        Buy Eco Friendly Jute Bags Online in India
+      </h1>
+
+      <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+        Explore our collection of eco-friendly jute bags that are reusable,
+        biodegradable, and perfect for daily use. EcoJute helps you switch
+        from plastic to sustainable living.
+      </p>
+    </div>
         <div className="mb-10 mt-10">
-          <h1 className="text-3xl font-bold">Our Products</h1>
-          <p className="text-muted-foreground mt-2">
-            Browse our collection of sustainable jute products
-          </p>
-        </div>
+           </div>
 
         {isError && (
           <p className="text-destructive text-center mt-10">

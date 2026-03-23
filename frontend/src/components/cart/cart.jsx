@@ -3,6 +3,7 @@ import { useCart } from "../../context/CartContext";
 import Navbar from "../Navbar";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 import {
   Card,
@@ -40,14 +41,11 @@ const Cart = () => {
 
     try {
       // 1️⃣ Create Order in backend (with cart + address)
-      const { data: orderData } = await api.post(
-        "/api/orders/create",
-        {
-          cart,
-          address,
-          amount: total,
-        }
-      );
+      const { data: orderData } = await api.post("/api/orders/create", {
+        cart,
+        address,
+        amount: total,
+      });
 
       const razorpayOrder = orderData.razorpayOrder;
 
@@ -59,13 +57,10 @@ const Cart = () => {
         order_id: razorpayOrder.id,
 
         handler: async function (response) {
-          const verifyRes = await api.post(
-            "/api/orders/verify-payment",
-            {
-              ...response,
-              orderId: orderData.orderId,
-            }
-          );
+          const verifyRes = await api.post("/api/orders/verify-payment", {
+            ...response,
+            orderId: orderData.orderId,
+          });
 
           if (verifyRes.data.success) {
             toast.success("Payment Successful 🎉");
@@ -86,6 +81,13 @@ const Cart = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Your Cart | EcoJute</title>
+        <meta
+          name="description"
+          content="Review your selected eco-friendly jute bags and proceed to checkout. Shop sustainable products with EcoJute."
+        />
+      </Helmet>
       <Navbar />
 
       <div className="max-w-6xl mx-auto p-6 mt-16 grid md:grid-cols-3 gap-6">
@@ -95,27 +97,25 @@ const Cart = () => {
 
           {cart.length === 0 ? (
             <div className="flex justify-center py-20">
-    <Card className="w-full max-w-md text-center">
-      <CardContent className="flex flex-col items-center gap-4 p-8">
+              <Card className="w-full max-w-md text-center">
+                <CardContent className="flex flex-col items-center gap-4 p-8">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                    <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+                  </div>
 
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-          <ShoppingCart className="h-8 w-8 text-muted-foreground" />
-        </div>
+                  <h2 className="text-xl font-semibold">Your cart is empty</h2>
 
-        <h2 className="text-xl font-semibold">Your cart is empty</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Looks like you haven’t added any bags yet. Start shopping to
+                    fill it up.
+                  </p>
 
-        <p className="text-sm text-muted-foreground">
-          Looks like you haven’t added any bags yet. Start shopping to fill it up.
-        </p>
-
-        <Button asChild>
-          <Link to="/products">Continue Shopping</Link>
-        </Button>
-
-      </CardContent>
-    </Card>
-  </div>
-
+                  <Button asChild>
+                    <Link to="/products">Continue Shopping</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           ) : (
             cart.map((item) => (
               <Card key={item._id}>
@@ -129,18 +129,13 @@ const Cart = () => {
 
                     <div>
                       <h2 className="font-semibold">{item.name}</h2>
-                      <p className="text-muted-foreground">
-                        ₹{item.price}
-                      </p>
+                      <p className="text-muted-foreground">₹{item.price}</p>
 
                       <div className="flex items-center gap-2 mt-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() =>
-                            updateQuantity(item._id, -1)
-                          }
-                        >
+                          onClick={() => updateQuantity(item._id, -1)}>
                           -
                         </Button>
 
@@ -149,10 +144,7 @@ const Cart = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() =>
-                            updateQuantity(item._id, 1)
-                          }
-                        >
+                          onClick={() => updateQuantity(item._id, 1)}>
                           +
                         </Button>
                       </div>
@@ -163,8 +155,7 @@ const Cart = () => {
                     variant="destructive"
                     size="sm"
                     onClick={() => removeFromCart(item._id)}
-                    className="px-3"
-                  >
+                    className="px-3">
                     Remove
                   </Button>
                 </CardContent>
@@ -182,9 +173,7 @@ const Cart = () => {
           <CardContent className="space-y-3">
             <Input
               placeholder="Full Name"
-              onChange={(e) =>
-                setAddress({ ...address, name: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, name: e.target.value })}
             />
             <Input
               placeholder="Phone Number"
@@ -203,9 +192,7 @@ const Cart = () => {
             />
             <Input
               placeholder="City"
-              onChange={(e) =>
-                setAddress({ ...address, city: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, city: e.target.value })}
             />
             <Input
               placeholder="Pincode"

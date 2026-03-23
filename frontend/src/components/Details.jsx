@@ -4,15 +4,12 @@ import { Leaf, Recycle, Heart } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
 function Details() {
-  
   return (
-    
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       transition={{ duration: 1 }}
       viewport={{ once: false }}>
-
       <div className="min-h-screen bg-background">
         <section className="py-20 bg-muted/30">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
