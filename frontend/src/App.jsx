@@ -10,7 +10,7 @@ import Home from "./components/Home/Home";
 // ✅ Everything else lazy loaded
 const Signup = lazy(() => import("./components/signup/Signup"));
 const Login = lazy(() => import("./components/Login"));
-const UploadProduct = lazy(() => import("./components/Add bags/UploadProduct"));
+// const UploadProduct = lazy(() => import("./components/Add bags/UploadProduct"));
 const BagList = lazy(() => import("./components/product/Bags"));
 const Cart = lazy(() => import("./components/cart/cart"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
@@ -34,10 +34,10 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
 
-          <Route
+          {/* <Route
             path="/uploadProduct"
             element={authUser ? <UploadProduct /> : <Navigate to="/signup" />}
-          />
+          /> */}
           <Route
             path="/products"
             element={authUser ? <BagList /> : <Navigate to="/signup" />}

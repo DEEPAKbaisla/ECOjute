@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-import banner from "@/assests/banner.png";
 import { Link } from "react-router-dom";
 
 export default function Hero() {
@@ -8,8 +7,12 @@ export default function Hero() {
       <div className="relative h-[500px] md:h-[650px] rounded-3xl overflow-hidden shadow-xl">
         {/* Background Image */}
         <img
-          src={banner}
+          src={
+            "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1781888582/home_ecojute_image_1_dxhqo1.png"
+          }
           alt="EcoJute Premium Collection"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
@@ -36,7 +39,7 @@ export default function Hero() {
           </div>
 
           {/* CTA */}
-          
+
           <div className="mt-8">
             <Link
               to="/products"
