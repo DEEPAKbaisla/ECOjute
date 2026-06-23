@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import api from "@/api/axios";
 import Navbar from "../Navbar";
@@ -21,40 +21,84 @@ const fetchBags = async ({ signal }) => {
 
 // ✅ Memoized card — only re-renders when bag/cartItem/handler changes
 const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
-  <Card className="hover:shadow-lg transition-all duration-200">
-    <CardContent className="p-4">
+  // <Card className="hover:shadow-lg hover:scale-103 transition-all duration-200">
+  //   <CardContent className="p-4">
+  //     <img
+  //       src={bag.images?.[0]}
+  //       alt={`Eco friendly jute bag ${bag.name} reusable shopping bag India`}
+  //       className="w-full h-48 object-contain rounded-md bg-gray-100"
+  //       loading="lazy"
+  //       width={300}
+  //       height={192}
+  //       onError={(e) => {
+  //         e.target.src = "/placeholder-bag.png";
+  //       }}
+  //     />
+  //     <div className="mt-4 space-y-1">
+  //       <h2 className="font-semibold text-lg">{bag.name}</h2>
+  //       <p className="text-sm text-muted-foreground">{bag.category}</p>
+  //       <p className="font-bold text-lg mt-2">₹{bag.price}</p>
+  //     </div>
+  //   </CardContent>
+  //   <CardFooter>
+  //     <Button
+  //       className="w-full"
+  //       variant={cartItem ? "secondary" : "default"}
+  //       onClick={() => onAddToCart(bag)}>
+  //       {cartItem ? (
+  //         <span className="font-semibold text-white dark:text-emerald-300">
+  //           ✓ Added to Cart
+  //         </span>
+  //       ) : (
+  //         "Add to Cart"
+  //       )}
+  //     </Button>
+  //   </CardFooter>
+  // </Card>
+  <Card className="group overflow-hidden rounded-3xl border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    {/* Image Section */}
+    <div className="relative">
       <img
         src={bag.images?.[0]}
-        alt={`Eco friendly jute bag ${bag.name} reusable shopping bag India`}
-        className="w-full h-48 object-contain rounded-md bg-gray-100"
+        alt={bag.name}
+        className="h-[310px] w-full object-cover bg-[#eef2ec] hover:scale-105 transition-transform duration-300 overflow-hidden"
         loading="lazy"
-        width={300}
-        height={192}
         onError={(e) => {
           e.target.src = "/placeholder-bag.png";
         }}
       />
-      <div className="mt-4 space-y-1">
-        <h2 className="font-semibold text-lg">{bag.name}</h2>
-        <p className="text-sm text-muted-foreground">{bag.category}</p>
-        <p className="font-bold text-lg mt-2">₹{bag.price}</p>
+
+      {/* Floating Add Button */}
+      <button
+        onClick={() => onAddToCart(bag)}
+        className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition">
+        +
+      </button>
+
+      {/* Eco Badge */}
+      <div className="absolute top-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold">
+        🌿 Eco Friendly
+      </div>
+    </div>
+
+    {/* Content */}
+    <CardContent className="p-6">
+      <p className="text-xs uppercase tracking-[2px] text-gray-500 font-semibold">
+        {bag.category}
+      </p>
+
+      <h2 className="mt-3 text-2xl font-serif font-semibold text-gray-900">
+        {bag.name}
+      </h2>
+      <hr className="my-2" />
+      <div className="mt-6 flex items-center justify-between">
+        <p className="text-xl font-semibold">₹ {bag.price}</p>
+
+        <span className="rounded-md bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+          Fair trade
+        </span>
       </div>
     </CardContent>
-    <CardFooter>
-      <Button
-        className="w-full"
-        variant={cartItem ? "secondary" : "default"}
-        onClick={() => onAddToCart(bag)}
-      >
-        {cartItem ? (
-          <span className="font-semibold text-white dark:text-emerald-300">
-            ✓ Added to Cart
-          </span>
-        ) : (
-          "Add to Cart"
-        )}
-      </Button>
-    </CardFooter>
   </Card>
 ));
 
@@ -75,6 +119,7 @@ const SkeletonGrid = () => (
 
 const BagList = () => {
   const { cart, addToCart } = useCart();
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   // ✅ React Query: auto-caching, deduplication, abort, background refetch
   const {
@@ -84,10 +129,9 @@ const BagList = () => {
   } = useQuery({
     queryKey: ["bags"],
     queryFn: fetchBags,
-    staleTime: 5 * 60 * 1000,  // serve from cache for 5 mins
-    retry: 2,                   // auto-retry twice on failure
+    staleTime: 5 * 60 * 1000, // serve from cache for 5 mins
+    retry: 2, // auto-retry twice on failure
   });
-  
 
   // ✅ Stable reference — memo on BagCard won't break across re-renders
   const handleAddToCart = useCallback(
@@ -95,34 +139,95 @@ const BagList = () => {
       addToCart(bag);
       toast.success(`${bag.name} added to cart!`);
     },
-    [addToCart]
+    [addToCart],
   );
+
+  const filteredBags =
+    selectedCategory === "all"
+      ? bags
+      : bags.filter((item) => item.category === selectedCategory);
 
   return (
     <>
-     <Helmet>
-    <title>Buy Jute Bags Online in India | EcoJute</title>
-    <meta
-      name="description"
-      content="Shop eco-friendly jute bags online in India. Durable, reusable, and sustainable bags for daily use."
-    />
-  </Helmet>
+      <Helmet>
+        <title>Buy Jute Bags Online in India | EcoJute</title>
+        <meta
+          name="description"
+          content="Shop eco-friendly jute bags online in India. Durable, reusable, and sustainable bags for daily use."
+        />
+      </Helmet>
       <Navbar />
-      <div className="min-h-screen bg-background py-10 px-6">
-         {/* ✅ SEO Heading */}
-    <div className="mb-10 mt-10 text-center">
-      <h1 className="text-3xl font-bold">
-        Buy Eco Friendly Jute Bags Online in India
-      </h1>
 
-      <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-        Explore our collection of eco-friendly jute bags that are reusable,
-        biodegradable, and perfect for daily use. EcoJute helps you switch
-        from plastic to sustainable living.
-      </p>
-    </div>
-        <div className="mb-10 mt-10">
-           </div>
+      <div className="min-h-screen bg-background py-10 px-6">
+        {/* ✅ SEO Heading */}
+        <div className="flex flex-col md:flex-row items-center justify-between mt-15 md:mx-20 mx-4 ">
+          <div className="text-start">
+            <h1 className="garamond text-xl md:text-2xl font-bold">
+              ECO-FRIENDLY MATERIALS
+            </h1>
+
+            <p className="text-muted-foreground mt-2 max-w-2xl mx-auto uppercase ">
+              biodegradable / plastic-free.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-8 mt-4 md:mt-0">
+            <Button
+              variant={selectedCategory === "all" ? "filter" : "nonfilter"}
+              onClick={() => setSelectedCategory("all")}>
+              VIEW ALL
+            </Button>
+
+            <Button
+              variant={selectedCategory === "bags" ? "filter" : "nonfilter"}
+              onClick={() => setSelectedCategory("bags")}>
+              BAGS
+            </Button>
+
+            <Button
+              variant={selectedCategory === "home" ? "filter" : "nonfilter"}
+              onClick={() => setSelectedCategory("home")}>
+              HOME
+            </Button>
+
+            <Button
+              variant={
+                selectedCategory === "accessories" ? "filter" : "nonfilter"
+              }
+              onClick={() => setSelectedCategory("accessories")}>
+              ACCESSORIES
+            </Button>
+          </div>
+        </div>
+
+        <hr className="md:mx-20 mt-2 mx-4" />
+        <div className="mb-10 mt-10"></div>
+
+        {/* <div className="flex flex-wrap justify-center gap-3 mb-8">
+          <Button
+            variant={selectedCategory === "all" ? "default" : "outline"}
+            onClick={() => setSelectedCategory("all")}>
+            All
+          </Button>
+
+          <Button
+            variant={selectedCategory === "bags" ? "default" : "outline"}
+            onClick={() => setSelectedCategory("bags")}>
+            Bags
+          </Button>
+
+          <Button
+            variant={selectedCategory === "accessories" ? "default" : "outline"}
+            onClick={() => setSelectedCategory("accessories")}>
+            Accessories
+          </Button>
+
+          <Button
+            variant={selectedCategory === "home" ? "default" : "outline"}
+            onClick={() => setSelectedCategory("home")}>
+            Home
+          </Button>
+        </div> */}
 
         {isError && (
           <p className="text-destructive text-center mt-10">
@@ -130,11 +235,36 @@ const BagList = () => {
           </p>
         )}
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <SkeletonGrid />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {bags.map((bag) => (
+            {filteredBags.map((bag) => (
+              <BagCard
+                key={bag._id}
+                bag={bag}
+                cartItem={cart.find((item) => item._id === bag._id)}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
+        )} */}
+
+        {isLoading ? (
+          <SkeletonGrid />
+        ) : filteredBags.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 ">
+            <h2 className="text-2xl font-semibold">No Products Found</h2>
+
+            <p className="text-muted-foreground mt-2 text-center">
+              No products are available in the{" "}
+              <span className="capitalize font-medium">{selectedCategory}</span>{" "}
+              category yet.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:mx-20 mx-2 mt-5">
+            {filteredBags.map((bag) => (
               <BagCard
                 key={bag._id}
                 bag={bag}

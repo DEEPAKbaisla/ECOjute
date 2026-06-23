@@ -39,7 +39,6 @@
 
 // export default AddBag;
 
-
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -82,7 +81,12 @@ const AddBag = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!data.name || !data.price || data.images.length === 0) {
+    if (
+      !data.name ||
+      !data.price ||
+      data.images.length === 0 ||
+      !data.category
+    ) {
       toast.error("Please fill all required fields!");
       return;
     }
@@ -131,14 +135,11 @@ const AddBag = () => {
         }
       });
 
-      const res = await api.post("/api/bags",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await api.post("/api/bags", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (res.data.success) {
         toast.success("Bag uploaded successfully!");
@@ -169,7 +170,6 @@ const AddBag = () => {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6 w-full">
-
             {/* Name */}
             <div className="space-y-2">
               <Label>Bag Name *</Label>
@@ -195,40 +195,39 @@ const AddBag = () => {
 
             {/* Price & Stock */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Price *</Label>
-              <Input
-                type="number"
-                name="price"
-                value={data.price}
-                onChange={handleChange}
-                placeholder="Enter price"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>In stock</Label>
-              <div className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm">
-                <input
-                  id="stock"
-                  type="checkbox"
-                  name="stock"
-                  checked={data.stock}
+              <div className="space-y-2">
+                <Label>Price *</Label>
+                <Input
+                  type="number"
+                  name="price"
+                  value={data.price}
                   onChange={handleChange}
-                  className="h-4 w-4"
+                  placeholder="Enter price"
                 />
-                <label
-                  htmlFor="stock"
-                  className="select-none text-sm text-foreground"
-                >
-                  Available for purchase
-                </label>
               </div>
-            </div>
+
+              <div className="space-y-2">
+                <Label>In stock</Label>
+                <div className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm">
+                  <input
+                    id="stock"
+                    type="checkbox"
+                    name="stock"
+                    checked={data.stock}
+                    onChange={handleChange}
+                    className="h-4 w-4"
+                  />
+                  <label
+                    htmlFor="stock"
+                    className="select-none text-sm text-foreground">
+                    Available for purchase
+                  </label>
+                </div>
+              </div>
             </div>
 
             {/* Category */}
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label>Category</Label>
               <Input
                 type="text"
@@ -237,6 +236,22 @@ const AddBag = () => {
                 onChange={handleChange}
                 placeholder="Travel, Laptop, School..."
               />
+            </div> */}
+            
+            <div className="space-y-2">
+              <label className="block font-medium mb-1">Category *</label>
+
+              <select
+                name="category"
+                value={data.category}
+                onChange={handleChange}
+                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 bg-white dark:bg-gray-700"
+                required>
+                <option value="">Select Category</option>
+                <option value="bags">Bags</option>
+                <option value="accessories">Accessories</option>
+                <option value="home">Home</option>
+              </select>
             </div>
 
             {/* Image */}
@@ -263,7 +278,6 @@ const AddBag = () => {
             <Button type="submit" className="w-full">
               Upload Bag
             </Button>
-
           </form>
         </CardContent>
       </Card>

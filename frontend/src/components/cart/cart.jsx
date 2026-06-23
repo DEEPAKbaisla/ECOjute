@@ -90,134 +90,194 @@ const Cart = () => {
       </Helmet>
       <Navbar />
 
-      <div className="max-w-6xl mx-auto p-6 mt-16 grid md:grid-cols-3 gap-6">
-        {/* LEFT - CART ITEMS */}
-        <div className="md:col-span-2 space-y-4">
-          <h1 className="text-2xl font-bold">Your Cart</h1>
+      <div className="max-w-7xl mx-auto px-6 py-12 mt-10">
+        <h1 className="text-3xl font-serif mb-3">Your Shopping Bag</h1>
 
-          {cart.length === 0 ? (
-            <div className="flex justify-center py-20">
-              <Card className="w-full max-w-md text-center">
-                <CardContent className="flex flex-col items-center gap-4 p-8">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                    <ShoppingCart className="h-8 w-8 text-muted-foreground" />
-                  </div>
+        <p className="text-muted-foreground mb-12">
+          Review your eco-friendly selection and delivery details.
+        </p>
 
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-12">
+          {/* LEFT SIDE */}
+          <div >
+            {cart.length === 0 ? (
+              <Card className="text-center p-10 ">
+                <CardContent>
+                  <ShoppingCart className="mx-auto h-12 w-12 mb-4" />
                   <h2 className="text-xl font-semibold">Your cart is empty</h2>
-
-                  <p className="text-sm text-muted-foreground">
-                    Looks like you haven’t added any bags yet. Start shopping to
-                    fill it up.
-                  </p>
-
-                  <Button asChild>
+                  <Button asChild className="mt-4">
                     <Link to="/products">Continue Shopping</Link>
                   </Button>
                 </CardContent>
               </Card>
-            </div>
-          ) : (
-            cart.map((item) => (
-              <Card key={item._id}>
-                <CardContent className="flex justify-between items-center p-4">
-                  <div className="flex gap-4 items-center">
-                    <img
-                      src={item.images?.[0]}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded-md"
-                    />
+            ) : (
+              <div className="space-y-10">
+                {cart.map((item) => (
+                  <div key={item._id} className="border-b pb-10 ">
+                    <div className="flex flex-col md:flex-row gap-6 ml-20 md:ml-0">
+                      {/* IMAGE */}
+                      <img
+                        src={item.images?.[0]}
+                        alt={item.name}
+                        className="w-44 h-44 object-cover"
+                      />
 
-                    <div>
-                      <h2 className="font-semibold">{item.name}</h2>
-                      <p className="text-muted-foreground">₹{item.price}</p>
+                      {/* DETAILS */}
+                      <div className="flex-1">
+                        <h2 className="text-3xl font-serif">{item.name}</h2>
 
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateQuantity(item._id, -1)}>
-                          -
-                        </Button>
+                        <p className="uppercase tracking-[2px] text-xs text-muted-foreground mt-2">
+                          EcoJute Collection
+                        </p>
 
-                        <span>{item.quantity}</span>
+                        <div className="flex gap-2 mt-4">
+                          <span className="border px-3 py-1 text-xs">
+                            Natural Jute
+                          </span>
 
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateQuantity(item._id, 1)}>
-                          +
-                        </Button>
+                          <span className="border px-3 py-1 text-xs">
+                            Sustainable
+                          </span>
+                        </div>
+
+                        {/* QUANTITY */}
+                        <div className="mt-8 flex items-center gap-6">
+                          <div className="border flex">
+                            <button
+                              className="px-4 py-2"
+                              onClick={() => updateQuantity(item._id, -1)}>
+                              -
+                            </button>
+
+                            <span className="px-5 py-2">{item.quantity}</span>
+
+                            <button
+                              className="px-4 py-2"
+                              onClick={() => updateQuantity(item._id, 1)}>
+                              +
+                            </button>
+                          </div>
+
+                          <button
+                            onClick={() => removeFromCart(item._id)}
+                            className="uppercase text-xs tracking-[2px] text-muted-foreground hover:text-red-500">
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* PRICE */}
+                      <div>
+                        <p className="text-3xl font-serif">₹{item.price}</p>
                       </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeFromCart(item._id)}
-                    className="px-3">
-                    Remove
-                  </Button>
-                </CardContent>
-              </Card>
-            ))
-          )}
+          {/* RIGHT SIDE */}
+            <Card className="h-fit sticky top-24">
+              <CardContent className="p-8">
+                <h3 className="uppercase tracking-[3px] text-sm font-semibold mb-8">
+                  Order Summary
+                </h3>
+
+                {/* ADDRESS */}
+                <div className="space-y-3 mb-8">
+                  <Input
+                    placeholder="Full Name"
+                    onChange={(e) =>
+                      setAddress({
+                        ...address,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Input
+                    placeholder="Phone Number"
+                    onChange={(e) =>
+                      setAddress({
+                        ...address,
+                        phone: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Textarea
+                    placeholder="Full Address"
+                    onChange={(e) =>
+                      setAddress({
+                        ...address,
+                        addressLine: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Input
+                    placeholder="City"
+                    onChange={(e) =>
+                      setAddress({
+                        ...address,
+                        city: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Input
+                    placeholder="Pincode"
+                    onChange={(e) =>
+                      setAddress({
+                        ...address,
+                        pincode: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4 py-6">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₹{total}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span className="text-green-700">Free</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span>Taxes</span>
+                    <span>₹0</span>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="flex justify-between text-2xl font-serif py-6">
+                  <span>Total</span>
+                  <span>₹{total}</span>
+                </div>
+
+                <Button
+                  onClick={handlePayment}
+                   disabled={cart.length === 0}
+                  className="w-full h-12 rounded-none bg-green-900 hover:bg-green-800">
+                  CHECKOUT
+                </Button>
+
+                <div className="mt-6 text-xs text-muted-foreground space-y-3">
+                  <p>🔒 Secure encrypted payment</p>
+                  <p>♻ Eco-friendly packaging</p>
+                  <p>🚚 Delivery across India</p>
+                </div>
+              </CardContent>
+            </Card>
         </div>
-
-        {/* RIGHT - ADDRESS + PAYMENT */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Delivery Address</CardTitle>
-          </CardHeader>
-
-          <CardContent className="space-y-3">
-            <Input
-              placeholder="Full Name"
-              onChange={(e) => setAddress({ ...address, name: e.target.value })}
-            />
-            <Input
-              placeholder="Phone Number"
-              onChange={(e) =>
-                setAddress({ ...address, phone: e.target.value })
-              }
-            />
-            <Textarea
-              placeholder="Full Address"
-              onChange={(e) =>
-                setAddress({
-                  ...address,
-                  addressLine: e.target.value,
-                })
-              }
-            />
-            <Input
-              placeholder="City"
-              onChange={(e) => setAddress({ ...address, city: e.target.value })}
-            />
-            <Input
-              placeholder="Pincode"
-              onChange={(e) =>
-                setAddress({
-                  ...address,
-                  pincode: e.target.value,
-                })
-              }
-            />
-
-            <Separator />
-
-            <div className="flex justify-between font-semibold">
-              <span>Total</span>
-              <span>₹{total}</span>
-            </div>
-          </CardContent>
-
-          <CardFooter>
-            <Button className="w-full" onClick={handlePayment}>
-              Proceed to Payment
-            </Button>
-          </CardFooter>
-        </Card>
       </div>
     </>
   );

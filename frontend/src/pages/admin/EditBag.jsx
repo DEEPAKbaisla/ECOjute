@@ -14,6 +14,7 @@ const EditBag = () => {
   const [data, setData] = useState({
     name: "",
     price: "",
+    category: "",
   });
   const [preview, setPreview] = useState(null);
 
@@ -25,6 +26,7 @@ const EditBag = () => {
         setData({
           name: bag?.name || "",
           price: bag?.price || "",
+          category: bag?.category || "",
         });
         setPreview(bag?.images?.[0] || null);
       } catch (err) {
@@ -41,7 +43,7 @@ const EditBag = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!data.name || !data.price) {
+    if (!data.name || !data.price || !data.category) {
       toast.error("Please fill all required fields!");
       return;
     }
@@ -87,6 +89,22 @@ const EditBag = () => {
                 placeholder="Enter price"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label>Category *</Label>
+
+              <select
+                name="category"
+                value={data.category}
+                onChange={handleChange}
+                className="w-full rounded-md border px-3 py-2 bg-background">
+                <option value="">Select Category</option>
+                <option value="bags">Bags</option>
+                <option value="accessories">Accessories</option>
+                <option value="home">Home</option>
+              </select>
+            </div>
+
             {preview && (
               <div className="space-y-2">
                 <Label>Current Image</Label>

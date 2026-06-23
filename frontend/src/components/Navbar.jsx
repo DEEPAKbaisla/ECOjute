@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import Logout from "./Logout";
-import { LayoutDashboard, Moon, ShoppingCart, Sun } from "lucide-react";
+import { Handbag, House, Moon, ShieldUser, ShoppingCart, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
+
 
 function Navbar() {
   const { getCartCount } = useCart();
@@ -32,7 +33,7 @@ function Navbar() {
         {/* Logo */}
         <a
           href="/"
-          className="text-2xl font-bold text-primary hover:text-primary/90"
+          className="garamond text-2xl font-bold text-[#203527] hover:text-[#4D6453]"
         >
           EcoJute
         </a>
@@ -43,13 +44,13 @@ function Navbar() {
             href="/"
             className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
           >
-            Home
+            <House />
           </a>
           <a
             href="/products"
             className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
           >
-            Products
+             <Handbag/>
           </a>
 
           {authUser?.role === "USER" && (
@@ -72,7 +73,7 @@ function Navbar() {
               className="hidden text-foreground/80 transition-colors hover:text-primary md:block"
               href="/admin"
             >
-              <LayoutDashboard className="h-5 w-5" />
+              <ShieldUser/>
             </a>
           )}
 

@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const bagSchema = new mongoose.Schema({
@@ -11,14 +10,18 @@ const bagSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  category: String,
+  category: {
+    type: String,
+    enum: ["bags", "accessories", "home"],
+    required: true,
+  },
   stock: {
     type: Boolean,
     default: true,
   },
   images: [
     {
-      type: String, 
+      type: String,
       required: true,
     },
   ],

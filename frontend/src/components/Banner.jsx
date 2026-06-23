@@ -1,48 +1,55 @@
-import React from "react";
-import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
+import banner from "@/assests/banner.png";
 import { Link } from "react-router-dom";
 
-const CLOUDINARY_BASE = "https://res.cloudinary.com/dxmmbkhq8/image/upload";
-const IMAGE_ID = "v1773333956/bag_lgm3ft.png";
-
-function Banner() {
+export default function Hero() {
   return (
-    <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10">    
-      <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
-        <div className="space-y-8">
-          <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            Sustainable Style with{" "}
-            <span className="text-green-700">Natural Jute</span>
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Discover our collection of eco-friendly jute bags and products.
-            Beautiful, durable, and kind to our planet.
-          </p>
-        </div>
-        <Button
-          asChild
-          className="mt-6 bg-green-700 hover:bg-green-800 text-white">
-          <Link to="/products">Buy Now</Link>
-        </Button>
-      </div>
+    <section className="max-w-screen-2xl md:mx-25 px-4 mt-30">
+      <div className="relative h-[500px] md:h-[650px] rounded-3xl overflow-hidden shadow-xl">
+        {/* Background Image */}
+        <img
+          src={banner}
+          alt="EcoJute Premium Collection"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
 
-      <div className="order-1 w-full mt-20 md:w-1/2">
-       <img
-  src="https://res.cloudinary.com/dxmmbkhq8/image/upload/f_webp,q_auto,w_550,h_460,c_limit/v1773333956/bag_lgm3ft.png"
-  srcSet={`
-    https://res.cloudinary.com/dxmmbkhq8/image/upload/f_webp,q_auto,w_550,h_460,c_limit/v1773333956/bag_lgm3ft.png 550w,
-    https://res.cloudinary.com/dxmmbkhq8/image/upload/f_webp,q_auto,w_1100,h_920,c_limit/v1773333956/bag_lgm3ft.png 1100w
-  `}
-  sizes="(max-width: 768px) 100vw, 550px"
-  className="md:w-[550px] md:h-[460px] md:ml-12 rounded-lg shadow-md"
-  alt="Eco-friendly jute bag"
-  fetchPriority="high"
-  width={550}
-  height={460}
-/>
+        {/* Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061b0e]/90 via-black/30 to-transparent" />
+
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-end p-6 md:p-12">
+          <div className="max-w-md text-white">
+            <span className="font-mono text-[13px] uppercase tracking-widest text-[#b4cdb8] font-bold mb-2.5 block">
+              Premium Collection 2025
+            </span>
+
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight garamond">
+              Handcrafted
+              <br />
+              Sustainability
+            </h1>
+
+            <p className="mt-5 text-sm md:text-base text-gray-200 leading-relaxed">
+              Luxury jute bags crafted with care. Sustainable, durable, stylish
+              and designed for conscious living.
+            </p>
+          </div>
+
+          {/* CTA */}
+          
+          <div className="mt-8">
+            <Link
+              to="/products"
+              className="group bg-white text-[#061b0e] hover:bg-gray-100 px-6 py-4 rounded-md font-semibold inline-flex items-center gap-2 transition">
+              <span>EXPLORE CURATIONS</span>
+              <ArrowRight
+                size={18}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
-
-export default Banner;
