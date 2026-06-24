@@ -15,13 +15,14 @@ const URI = process.env.MONGODB_URI;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://ec-ojute-9nt6.vercel.app"
+  "https://ec-ojute-9nt6.vercel.app",
+  "https://ec-ojute.vercel.app"
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      callback(null, true);
     } else {
       callback(new Error("CORS not allowed"));
     }

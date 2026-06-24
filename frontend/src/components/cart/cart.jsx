@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
@@ -31,6 +31,7 @@ const Cart = () => {
     pincode: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const total = getCartTotal();
 
   const handlePayment = async () => {
@@ -40,6 +41,7 @@ const Cart = () => {
     }
 
     try {
+      setLoading(true);
       // 1️⃣ Create Order in backend (with cart + address)
       const { data: orderData } = await api.post("/api/orders/create", {
         cart,
@@ -57,25 +59,41 @@ const Cart = () => {
         order_id: razorpayOrder.id,
 
         handler: async function (response) {
-          const verifyRes = await api.post("/api/orders/verify-payment", {
-            ...response,
-            orderId: orderData.orderId,
-          });
+          try {
+            setLoading(true);
+            const verifyRes = await api.post("/api/orders/verify-payment", {
+              ...response,
+              orderId: orderData.orderId,
+            });
 
-          if (verifyRes.data.success) {
-            toast.success("Payment Successful 🎉");
-            clearCart();
-          } else {
+            if (verifyRes.data.success) {
+              toast.success("Payment Successful 🎉");
+              clearCart();
+            } else {
+              toast.error("Payment verification failed");
+            }
+          } catch (verifyErr) {
+            console.error(verifyErr);
             toast.error("Payment verification failed");
+          } finally {
+            setLoading(false);
           }
         },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          }
+        }
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+      // Razorpay modal is open, we can reset local button loading state since payment popup is active
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error("Payment failed");
+      setLoading(false);
     }
   };
 
@@ -188,6 +206,7 @@ const Cart = () => {
                 <div className="space-y-3 mb-8">
                   <Input
                     placeholder="Full Name"
+                    disabled={loading}
                     onChange={(e) =>
                       setAddress({
                         ...address,
@@ -198,6 +217,7 @@ const Cart = () => {
 
                   <Input
                     placeholder="Phone Number"
+                    disabled={loading}
                     onChange={(e) =>
                       setAddress({
                         ...address,
@@ -208,6 +228,7 @@ const Cart = () => {
 
                   <Textarea
                     placeholder="Full Address"
+                    disabled={loading}
                     onChange={(e) =>
                       setAddress({
                         ...address,
@@ -218,6 +239,7 @@ const Cart = () => {
 
                   <Input
                     placeholder="City"
+                    disabled={loading}
                     onChange={(e) =>
                       setAddress({
                         ...address,
@@ -228,6 +250,7 @@ const Cart = () => {
 
                   <Input
                     placeholder="Pincode"
+                    disabled={loading}
                     onChange={(e) =>
                       setAddress({
                         ...address,
@@ -265,9 +288,16 @@ const Cart = () => {
 
                 <Button
                   onClick={handlePayment}
-                   disabled={cart.length === 0}
-                  className="w-full h-12 rounded-none bg-green-900 hover:bg-green-800">
-                  CHECKOUT
+                  disabled={cart.length === 0 || loading}
+                  className="w-full h-12 rounded-none bg-green-900 hover:bg-green-800 flex items-center justify-center gap-2">
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      PROCESSING...
+                    </>
+                  ) : (
+                    "CHECKOUT"
+                  )}
                 </Button>
 
                 <div className="mt-6 text-xs text-muted-foreground space-y-3">

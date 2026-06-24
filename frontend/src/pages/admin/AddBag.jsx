@@ -43,6 +43,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axios";
+import { Loader2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ import { Label } from "@/components/ui/label";
 
 const AddBag = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState({
     name: "",
@@ -123,6 +125,7 @@ const AddBag = () => {
     // }
 
     try {
+      setLoading(true);
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         if (key === "images") {
@@ -148,8 +151,8 @@ const AddBag = () => {
           description: "",
           price: "",
           category: "",
-          stock: "",
-          image: "",
+          stock: true,
+          images: [],
         });
         setPreview(null);
       } else {
@@ -158,6 +161,8 @@ const AddBag = () => {
     } catch (error) {
       console.log(error);
       toast.error("Upload failed..");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,6 +181,7 @@ const AddBag = () => {
               <Input
                 type="text"
                 name="name"
+                disabled={loading}
                 value={data.name}
                 onChange={handleChange}
                 placeholder="Enter bag name"
@@ -187,6 +193,7 @@ const AddBag = () => {
               <Label>Description</Label>
               <Textarea
                 name="description"
+                disabled={loading}
                 value={data.description}
                 onChange={handleChange}
                 placeholder="Enter description"
@@ -200,6 +207,7 @@ const AddBag = () => {
                 <Input
                   type="number"
                   name="price"
+                  disabled={loading}
                   value={data.price}
                   onChange={handleChange}
                   placeholder="Enter price"
@@ -213,6 +221,7 @@ const AddBag = () => {
                     id="stock"
                     type="checkbox"
                     name="stock"
+                    disabled={loading}
                     checked={data.stock}
                     onChange={handleChange}
                     className="h-4 w-4"
@@ -243,6 +252,7 @@ const AddBag = () => {
 
               <select
                 name="category"
+                disabled={loading}
                 value={data.category}
                 onChange={handleChange}
                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 bg-white dark:bg-gray-700"
@@ -260,6 +270,7 @@ const AddBag = () => {
               <Input
                 type="file"
                 name="images"
+                disabled={loading}
                 accept="image/*"
                 multiple
                 onChange={handleImageChange}
@@ -275,8 +286,15 @@ const AddBag = () => {
             </div>
 
             {/* Submit */}
-            <Button type="submit" className="w-full">
-              Upload Bag
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading Bag...
+                </>
+              ) : (
+                "Upload Bag"
+              )}
             </Button>
           </form>
         </CardContent>

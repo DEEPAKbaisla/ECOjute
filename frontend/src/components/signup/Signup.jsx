@@ -125,10 +125,12 @@ import GoogleSignIn from "../GoogleSignIn";
 import api from "@/api/axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Loader2 } from "lucide-react";
 
 function Signup() {
   const [redirect, setRedirect] = useState(false);
   const Navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -138,6 +140,7 @@ function Signup() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await api.post("/api/user/signup", {
         fullname: data.fullname,
         email: data.email,
@@ -153,6 +156,8 @@ function Signup() {
       if (err.response) {
         toast.error(err.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -175,6 +180,7 @@ function Signup() {
               <Input
                 type="text"
                 placeholder="Full Name"
+                disabled={loading}
                 {...register("fullname", { required: true })}
               />
               {errors.fullname && (
@@ -188,6 +194,7 @@ function Signup() {
               <Input
                 type="email"
                 placeholder="Email"
+                disabled={loading}
                 {...register("email", { required: true })}
               />
               {errors.email && (
@@ -199,6 +206,7 @@ function Signup() {
               <Input
                 type="password"
                 placeholder="Password"
+                disabled={loading}
                 {...register("password", { required: true })}
               />
               {errors.password && (
@@ -208,8 +216,15 @@ function Signup() {
               )}
             </div>
 
-            <Button type="submit" className="w-full">
-              Create My Account
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                "Create My Account"
+              )}
             </Button>
             <GoogleSignIn />
 

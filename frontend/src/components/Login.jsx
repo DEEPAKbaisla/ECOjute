@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import api from "../api/axios";
 import GoogleSignIn from "./GoogleSignIn";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,9 +26,11 @@ function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await api.post("/api/user/login", {
         email: data.email,
         password: data.password,
@@ -46,6 +49,8 @@ function Login() {
       if (err.response) {
         toast.error(err.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,6 +72,7 @@ function Login() {
             <Input
               type="email"
               placeholder="Email"
+              disabled={loading}
               {...register("email", { required: true })}
             />
             {errors.email && (
@@ -80,6 +86,7 @@ function Login() {
             <Input
               type="password"
               placeholder="Password"
+              disabled={loading}
               {...register("password", { required: true })}
             />
             {errors.password && (
@@ -89,8 +96,15 @@ function Login() {
             )}
           </div>
 
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </Button>
 
            <div className="mt-4">

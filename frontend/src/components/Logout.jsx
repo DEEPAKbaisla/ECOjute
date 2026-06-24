@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 function Logout() {
   const { authUser, setAuthUser } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const handleLogout = () => {
     try {
+      setLoading(true);
       setAuthUser({
         ...authUser,
         user: null,
@@ -18,18 +21,21 @@ function Logout() {
       setTimeout(() => {
         window.location.reload();
         navigate("/");
-      },2000);
+      }, 2000);
     } catch (error) {
       toast.error(error.message);
-      setTimeout(()=>{},2300)
+      setLoading(false);
     }
   };
+
   return (
     <div>
       <button
-        className="px-3 py-2 bg-red-600 text-white rounded-md cursor-pointer"
-        onClick={handleLogout}>
-        Logout
+        className="px-3 py-2 bg-red-600 text-white rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={handleLogout}
+        disabled={loading}
+      >
+        {loading ? "Logging out..." : "Logout"}
       </button>
     </div>
   );
