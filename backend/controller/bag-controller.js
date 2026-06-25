@@ -68,10 +68,34 @@ export const updateBag = async (req, res) => {
       });
     }
 
-    // If new image uploaded
-    if (req.file) {
-      const uploadResult = await uploadCloud(req.file);
-      bagData.image = uploadResult.secure_url;
+    // Handle image updates (merge remaining existing images and new uploads)
+    let imagesToKeep = [];
+    if (req.body.existingImages) {
+      try {
+        imagesToKeep = JSON.parse(req.body.existingImages);
+        if (!Array.isArray(imagesToKeep)) {
+          imagesToKeep = [imagesToKeep];
+        }
+      } catch (e) {
+        imagesToKeep = Array.isArray(req.body.existingImages)
+          ? req.body.existingImages
+          : [req.body.existingImages];
+      }
+    } else {
+      imagesToKeep = bagData.images || [];
+    }
+
+    const newUploadedImages = [];
+    if (req.files && req.files.length > 0) {
+      for (let file of req.files) {
+        const result = await uploadCloud(file);
+        newUploadedImages.push(result.secure_url);
+      }
+    }
+
+    // Only update if existingImages was explicitly sent or new images were uploaded
+    if (req.body.existingImages !== undefined || (req.files && req.files.length > 0)) {
+      bagData.images = [...imagesToKeep, ...newUploadedImages];
     }
 
     // Update fields
@@ -79,7 +103,7 @@ export const updateBag = async (req, res) => {
     bagData.description = description || bagData.description;
     bagData.price = price || bagData.price;
     bagData.category = category || bagData.category;
-    bagData.stock = stock !== undefined ? stock : bagData.stock;
+    bagData.stock = stock !== undefined ? (stock === 'true' || stock === true) : bagData.stock;
 
     await bagData.save();
 

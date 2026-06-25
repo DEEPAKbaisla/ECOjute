@@ -1,4 +1,4 @@
-import{r as i}from"./vendor-misc-89IPY3h9.js";import"./vendor-react-dom-COk_Utuv.js";/**
+import{r as i}from"./vendor-misc-BaUZp8kx.js";import"./vendor-react-dom-BII4z7zV.js";/**
  * react-router v7.9.1
  *
  * Copyright (c) Remix Software Inc.

@@ -19,6 +19,7 @@ const AddBag = lazy(() => import("./pages/admin/AddBag"));
 const ManageBags = lazy(() => import("./pages/admin/ManageBags"));
 const EditBag = lazy(() => import("./pages/admin/EditBag"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -51,9 +52,14 @@ function App() {
             path="/uploadProduct"
             element={authUser ? <UploadProduct /> : <Navigate to="/signup" />}
           /> */}
+          
           <Route
             path="/products"
             element={authUser ? <BagList /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="/products/:id"
+            element={authUser ? <ProductDetails /> : <Navigate to="/signup" />}
           />
           <Route
             path="/cart"

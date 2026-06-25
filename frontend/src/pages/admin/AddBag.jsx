@@ -64,7 +64,7 @@ const AddBag = () => {
     images: [],
   });
 
-  const [preview, setPreview] = useState(null);
+  const [previews, setPreviews] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -77,7 +77,8 @@ const AddBag = () => {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files || []);
     setData({ ...data, images: files });
-    setPreview(files[0] ? URL.createObjectURL(files[0]) : null);
+    const objectUrls = files.map((file) => URL.createObjectURL(file));
+    setPreviews(objectUrls);
   };
 
   const handleSubmit = async (e) => {
@@ -154,7 +155,7 @@ const AddBag = () => {
           stock: true,
           images: [],
         });
-        setPreview(null);
+        setPreviews([]);
       } else {
         toast.error(res.data.message || "Something went wrong!");
       }
@@ -276,12 +277,17 @@ const AddBag = () => {
                 onChange={handleImageChange}
               />
 
-              {preview && (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-40 h-40 object-cover rounded-md mt-3 border"
-                />
+              {previews.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+                  {previews.map((src, index) => (
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`Preview ${index + 1}`}
+                      className="h-28 w-28 rounded-md border object-cover bg-gray-50 shadow-sm"
+                    />
+                  ))}
+                </div>
               )}
             </div>
 

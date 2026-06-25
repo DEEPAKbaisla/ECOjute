@@ -70,7 +70,7 @@ function Navbar() {
 
           {authUser?.role === "ADMIN" && (
             <a
-              className="hidden text-foreground/80 transition-colors hover:text-primary md:block"
+              className="text-foreground/80 transition-colors hover:text-primary "
               href="/admin"
             >
               <ShieldUser/>
@@ -78,7 +78,7 @@ function Navbar() {
           )}
 
           {/* Theme Toggle */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="icon"
@@ -91,7 +91,7 @@ function Navbar() {
             ) : (
               <Sun className="h-5 w-5" />
             )}
-          </Button>
+          </Button> */}
 
           {authUser ? (
             <Logout />

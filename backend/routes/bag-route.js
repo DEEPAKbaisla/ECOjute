@@ -10,7 +10,7 @@ router.get("/", getAllBags);
 router.get("/:id", getBagById);
 
 router.post("/",  upload.array("images", 5),  authMiddleware, adminMiddleware, addBag);
-router.put("/:id", authMiddleware, adminMiddleware, updateBag);
+router.put("/:id", upload.array("images", 5), authMiddleware, adminMiddleware, updateBag);
 router.patch("/:id/status", authMiddleware, adminMiddleware, updateBagStatus);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteBag);
 

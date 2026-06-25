@@ -6,7 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Loader2, X } from "lucide-react";
 
 const EditBag = () => {
   const { id } = useParams();
@@ -14,10 +15,12 @@ const EditBag = () => {
 
   const [data, setData] = useState({
     name: "",
+    description: "",
     price: "",
     category: "",
   });
-  const [preview, setPreview] = useState(null);
+  const [existingImages, setExistingImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -29,10 +32,11 @@ const EditBag = () => {
         const bag = res.data.bag;
         setData({
           name: bag?.name || "",
+          description: bag?.description || "",
           price: bag?.price || "",
           category: bag?.category || "",
         });
-        setPreview(bag?.images?.[0] || null);
+        setExistingImages(bag?.images || []);
       } catch (err) {
         toast.error("Failed to load bag");
       } finally {
@@ -47,6 +51,19 @@ const EditBag = () => {
     setData({ ...data, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    setNewImages((prev) => [...prev, ...files]);
+  };
+
+  const handleRemoveExisting = (index) => {
+    setExistingImages((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleRemoveNew = (index) => {
+    setNewImages((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!data.name || !data.price || !data.category) {
@@ -55,7 +72,26 @@ const EditBag = () => {
     }
     try {
       setLoading(true);
-      const res = await api.put(`/api/bags/${id}`, data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("price", data.price);
+      formData.append("category", data.category);
+
+      formData.append("existingImages", JSON.stringify(existingImages));
+
+      if (newImages.length > 0) {
+        newImages.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+
+      const res = await api.put(`/api/bags/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       if (res.data.success) {
         toast.success("Bag updated successfully!");
         navigate("/admin/manage-bags");
@@ -84,6 +120,7 @@ const EditBag = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="w-full space-y-6">
+              {/* Name */}
               <div className="space-y-2">
                 <Label>Bag Name *</Label>
                 <Input
@@ -93,8 +130,23 @@ const EditBag = () => {
                   value={data.name}
                   onChange={handleChange}
                   placeholder="Enter bag name"
+                  required
                 />
               </div>
+
+              {/* Description */}
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea
+                  name="description"
+                  disabled={loading}
+                  value={data.description}
+                  onChange={handleChange}
+                  placeholder="Enter description"
+                />
+              </div>
+
+              {/* Price */}
               <div className="space-y-2">
                 <Label>Price *</Label>
                 <Input
@@ -104,18 +156,20 @@ const EditBag = () => {
                   value={data.price}
                   onChange={handleChange}
                   placeholder="Enter price"
+                  required
                 />
               </div>
 
+              {/* Category */}
               <div className="space-y-2">
                 <Label>Category *</Label>
-
                 <select
                   name="category"
                   disabled={loading}
                   value={data.category}
                   onChange={handleChange}
-                  className="w-full rounded-md border px-3 py-2 bg-background">
+                  className="w-full rounded-md border px-3 py-2 bg-background"
+                  required>
                   <option value="">Select Category</option>
                   <option value="bags">Bags</option>
                   <option value="accessories">Accessories</option>
@@ -123,16 +177,72 @@ const EditBag = () => {
                 </select>
               </div>
 
-              {preview && (
+              {/* Image upload */}
+              <div className="space-y-2">
+                <Label>Add More Images</Label>
+                <Input
+                  type="file"
+                  name="images"
+                  disabled={loading}
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                />
+              </div>
+
+              {/* Previews and Image Manager Grid */}
+              {(existingImages.length > 0 || newImages.length > 0) && (
                 <div className="space-y-2">
-                  <Label>Current Image</Label>
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="mt-1 h-40 w-40 rounded-md border object-cover"
-                  />
+                  <Label>Current Images & New Uploads</Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+                    {/* Existing Images */}
+                    {existingImages.map((src, index) => (
+                      <div key={`existing-${index}`} className="relative border rounded-md overflow-hidden aspect-square h-28 w-28 bg-gray-50 shadow-sm">
+                        <img
+                          src={src}
+                          alt={`Existing ${index + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={() => handleRemoveExisting(index)}
+                          className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5"
+                          title="Remove existing image"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                        <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">Saved</span>
+                      </div>
+                    ))}
+
+                    {/* New Images */}
+                    {newImages.map((file, index) => {
+                      const url = URL.createObjectURL(file);
+                      return (
+                        <div key={`new-${index}`} className="relative border rounded-md overflow-hidden aspect-square h-28 w-28 bg-gray-50 shadow-sm">
+                          <img
+                            src={url}
+                            alt={`New ${index + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            disabled={loading}
+                            onClick={() => handleRemoveNew(index)}
+                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5"
+                            title="Remove selected image"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                          <span className="absolute bottom-1 left-1 bg-emerald-700 text-white text-[9px] px-1 rounded">New</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+
               <Button type="submit" className="w-full md:w-auto" disabled={loading}>
                 {loading ? (
                   <>

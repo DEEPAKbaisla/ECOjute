@@ -1,1 +1,0 @@
-import{a as r}from"./vendor-axios-ngrFHoWO.js";const a=r.create({baseURL:"http://localhost:5000",withCredentials:!0});a.interceptors.request.use(e=>{const t=localStorage.getItem("token");return t&&(e.headers.Authorization=`Bearer ${t}`),e});export{a};

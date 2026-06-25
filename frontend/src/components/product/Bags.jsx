@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 // ✅ Fetch function — defined outside component, no re-creation on render
 const fetchBags = async ({ signal }) => {
@@ -55,46 +56,50 @@ const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
   //     </Button>
   //   </CardFooter>
   // </Card>
-  <Card className="group overflow-hidden rounded-3xl border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+  <Card className="group overflow-hidden rounded-3xl border border-border/55 bg-card shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
     {/* Image Section */}
     <div className="relative">
-      <img
-        src={bag.images?.[0]}
-        alt={bag.name}
-        className="h-[310px] w-full object-cover bg-[#eef2ec] hover:scale-105 transition-transform duration-300 overflow-hidden"
-        loading="lazy"
-        onError={(e) => {
-          e.target.src = "/placeholder-bag.png";
-        }}
-      />
+      <Link to={`/products/${bag._id}`}>
+        <img
+          src={bag.images?.[0]}
+          alt={bag.name}
+          className="h-[310px] w-full object-cover bg-[#eef2ec] dark:bg-muted hover:scale-105 transition-transform duration-300 overflow-hidden cursor-pointer"
+          loading="lazy"
+          onError={(e) => {
+            e.target.src = "/placeholder-bag.png";
+          }}
+        />
+      </Link>
 
       {/* Floating Add Button */}
       <button
         onClick={() => onAddToCart(bag)}
-        className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition">
+        className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-card border border-border text-foreground shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition">
         +
       </button>
 
       {/* Eco Badge */}
-      <div className="absolute top-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold">
+      <div className="absolute top-4 left-4 rounded-full bg-card/90 border border-border/50 px-3 py-1 text-xs font-semibold text-foreground">
         🌿 Eco Friendly
       </div>
     </div>
 
     {/* Content */}
     <CardContent className="p-6">
-      <p className="text-xs uppercase tracking-[2px] text-gray-500 font-semibold">
+      <p className="text-xs uppercase tracking-[2px] text-muted-foreground font-semibold">
         {bag.category}
       </p>
 
-      <h2 className="mt-3 text-2xl font-serif font-semibold text-gray-900">
-        {bag.name}
-      </h2>
-      <hr className="my-2" />
+      <Link to={`/products/${bag._id}`} className="hover:underline">
+        <h2 className="mt-3 text-2xl font-serif font-semibold text-foreground hover:text-primary transition-colors">
+          {bag.name}
+        </h2>
+      </Link>
+      <hr className="my-2 border-border" />
       <div className="mt-6 flex items-center justify-between">
         <p className="text-xl font-semibold">₹ {bag.price}</p>
 
-        <span className="rounded-md bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+        <span className="rounded-md bg-emerald-100 dark:bg-emerald-950/50 px-3 py-1 text-xs font-medium text-emerald-800 dark:text-emerald-300">
           Fair trade
         </span>
       </div>

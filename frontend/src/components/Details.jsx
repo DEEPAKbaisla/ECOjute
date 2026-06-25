@@ -123,15 +123,15 @@ function Details() {
         </section>
 
         {/* ARTISAN MINI TEASER SECTION */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white p-6 md:p-8 border border-[#eae8e7] rounded-3xl shadow-sm mx-4 md:mx-25 mt-20">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-card p-6 md:p-8 border border-border rounded-3xl shadow-sm mx-4 md:mx-25 mt-20">
           <div>
-            <span className="font-mono text-[12px] uppercase text-[#737973] tracking-wider font-extrabold block mb-2">
+            <span className="font-mono text-[12px] uppercase text-muted-foreground tracking-wider font-extrabold block mb-2">
               the human foundation
             </span>
-            <h3 className="garamond text-2xl md:text-4xl font-bold text-[#061b0e]">
+            <h3 className="garamond text-2xl md:text-4xl font-bold text-foreground">
               Preserving Bengal's Heritage Loom
             </h3>
-            <p className="font-sans text-sm text-[#434843] leading-relaxed mt-4">
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed mt-4">
               "Every weave we throw represents a heartbeat of history." Through
               direct fair trade integration, we bypass layers of intermediaries.
               Weavers like Meera Sen earn certified living margins to support
@@ -162,26 +162,26 @@ function Details() {
             </div>
           </div>
 
-          <div className="aspect-[16/10] rounded-2xl overflow-hidden shadow-inner relative border border-[#eae8e7]">
+          <div className="aspect-[16/10] rounded-2xl overflow-hidden shadow-inner relative border border-border">
             <img
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMsBRL7TH0uReasmXg-GRiJK-d3bP3iVrOXKI9IhKTvwAReH9XU57ULPdWeKLSC0hmn8RUUcCSLxOB-ZSgjxzLV_OyTCBxl45J0vhflDgLOHDOS5eiR2wWdJhw8hnJUSjTulfDOw-0DYr0mBRbcb9C3UZhM-PjiKjYzmoF8-GxsdeSD781Upe91nnJlhrd8Y2KH317cKxdgxnI4Ktc5Iu4n-R6jJeGtm2DIF1MM9tyf977qUHzMfYXElzHNfGNnhd-wHYeF8jCNeI"
               alt="Artisan Weavers"
               className="w-full h-full object-cover select-none"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute top-3 right-3 bg-white glass px-3 py-1 rounded-full text-[9px] uppercase font-bold text-[#1b3022] border border-[#c3c8c1]">
+            <div className="absolute top-3 right-3 bg-card/90 glass px-3 py-1 rounded-full text-[9px] uppercase font-bold text-foreground border border-border">
               Meera Sen's Loom
             </div>
           </div>
         </section>
 
         {/* NEWSLETTER FORM */}
-        <section className="py-12 px-6 bg-[#f5f2ed] border border-[#eae8e7] rounded-3xl text-center max-w-2xl md:mx-auto shadow-inner mt-20 mx-4 mb-20">
-          <Mail className="w-8 h-8 text-[#1b3022] mx-auto mb-3" />
-          <h4 className="font-serif text-xl font-bold text-[#061b0e]">
+        <section className="py-12 px-6 bg-muted/40 border border-border rounded-3xl text-center max-w-2xl md:mx-auto shadow-inner mt-20 mx-4 mb-20">
+          <Mail className="w-8 h-8 text-primary mx-auto mb-3" />
+          <h4 className="font-serif text-xl font-bold text-foreground">
             Join the Regenerative Movement
           </h4>
-          <p className="font-sans text-sm text-[#737973] max-w-md mx-auto mt-2 leading-close">
+          <p className="font-sans text-sm text-muted-foreground max-w-md mx-auto mt-2 leading-close">
             Subscribe to receive boutique seasonal releases, carbon ledger
             metrics, and stories directly from the Hooghly collective tea rooms.
           </p>
@@ -195,11 +195,11 @@ function Details() {
               value={newsletterEmail}
               onChange={(e) => setNewsletterEmail(e.target.value)}
               placeholder="Enter email coordinate"
-              className="flex-1 px-4 py-2.5 bg-white border border-[#c3c8c1] rounded text-xs focus:outline-none focus:border-[#1b3022]"
+              className="flex-1 px-4 py-2.5 bg-background border border-border rounded text-xs focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
             />
             <button
               type="submit"
-              className="bg-[#1b3022] text-[#fbf9f8] hover:bg-[#0b2013] text-xs uppercase font-extrabold tracking-wider px-6 py-2.5 rounded transition-transform active:scale-95 duration-100 cursor-pointer h-10 shadow-md whitespace-nowrap">
+              className="bg-foreground text-background hover:opacity-80 text-xs uppercase font-extrabold tracking-wider px-6 py-2.5 rounded transition-transform active:scale-95 duration-100 cursor-pointer h-10 shadow-md whitespace-nowrap">
               Subscribe
             </button>
           </form>

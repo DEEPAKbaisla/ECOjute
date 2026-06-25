@@ -12,7 +12,7 @@ const FeaturedBagCard = lazy(() => import("../Featureitems"));
 
 const Loader = () => (
   <div className="flex items-center justify-center py-20">
-    <Loader2 className="h-10 w-10 animate-spin text-green-700" />
+    <Loader2 className="h-10 w-10 animate-spin text-primary" />
   </div>
 );
 

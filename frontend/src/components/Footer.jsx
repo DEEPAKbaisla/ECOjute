@@ -10,13 +10,13 @@ const Footer = () => {
           {/* Left */}
           <div className="text-center md:text-left">
             <h3 className="garamond font-serif text-2xl font-semibold">EcoJute</h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-muted-foreground">
               © 2025 EcoJute. Handcrafted with intention.
             </p>
           </div>
 
           {/* Center Links */}
-          <nav className="flex flex-wrap justify-center gap-8 text-sm text-gray-700">
+          <nav className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
             <a href="#">Sustainability</a>
             <a href="#">Shipping</a>
             <a href="#">Returns</a>

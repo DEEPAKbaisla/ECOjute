@@ -25,7 +25,7 @@ const featuredBags = [
     name: "Golden-Weave Tote",
     category: "Bags",
     images: [
-      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782204443/tote_dixmfp.webp",
+      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782385457/totef_un3orx.png",
     ],
     savedKg: 3200,
   },
@@ -42,31 +42,31 @@ const featuredBags = [
 
 const FeaturedBagCard = () => {
   return (
-    <section className="py-20 bg-[#f7f5f2]">
+    <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-end gap-4 mb-3">
           <div className="min-w-0">
-            <h2 className="text-lg md:text-2xl font-serif font-bold whitespace-nowrap">
+            <h2 className="text-lg md:text-2xl font-serif font-bold whitespace-nowrap text-foreground">
               Featured Handlooms
             </h2>
 
-            <p className="mt-1 text-[12px] sm:text-[14px] uppercase text-gray-500">
+            <p className="mt-1 text-[12px] sm:text-[14px] uppercase text-muted-foreground">
               Curated Minimal Drops
             </p>
           </div>
 
           <Link
             to="/products"
-            className="shrink-0 text-sm sm:text-base font-medium underline">
+            className="shrink-0 text-sm sm:text-base font-medium underline text-primary hover:text-primary/80 transition-colors">
             View Boutique Grid
           </Link>
         </div>
-        <hr className="border-gray-300 mb-8 mt-2" />
+        <hr className="border-border mb-8 mt-2" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredBags.map((bag) => (
             <Link key={bag.id} to="/products">
-              <Card className="group overflow-hidden rounded-3xl">
+              <Card className="group overflow-hidden rounded-3xl border border-border/50 bg-card hover:shadow-lg transition-all duration-300">
                 <div className="relative p-4 pb-0">
                   <img
                     src={bag.images[0]}
@@ -76,17 +76,17 @@ const FeaturedBagCard = () => {
                     className="h-[320px] w-full object-cover rounded-2xl"
                   />
 
-                  <div className="absolute bottom-6 left-6 bg-[#163b2f] text-white px-3 py-1 rounded-md text-xs font-semibold">
+                  <div className="absolute bottom-6 left-6 bg-primary text-primary-foreground px-3 py-1 rounded-md text-xs font-semibold">
                     {bag.savedKg}L SAVED
                   </div>
                 </div>
 
                 <CardContent className="p-5">
-                  <p className="text-xs uppercase tracking-[2px] text-gray-500">
+                  <p className="text-xs uppercase tracking-[2px] text-muted-foreground">
                     {bag.category}
                   </p>
 
-                  <h3 className="mt-2 text-xl font-serif font-semibold">
+                  <h3 className="mt-2 text-xl font-serif font-semibold text-foreground">
                     {bag.name}
                   </h3>
                 </CardContent>
