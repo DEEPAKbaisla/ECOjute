@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../Navbar";
 import api from "../../api/axios";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 
 import {

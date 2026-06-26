@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import api from "../api/axios";
 import GoogleSignIn from "./GoogleSignIn";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import {
   CardDescription,
 } from "./ui/card";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useAuth } from "@/context/AuthProvider";
 
 function Login() {
   const {
@@ -27,6 +28,7 @@ function Login() {
   } = useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuth();
 
   const onSubmit = async (data) => {
     try {
@@ -36,19 +38,17 @@ function Login() {
         password: data.password,
       });
 
-      toast.success("Login Successfully");
+      toast.success("Login Successfully 🎉");
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
 
-      setTimeout(() => {
-        // window.location.reload();
-        navigate("/");
-      }, 1300);
+      setAuthUser(res.data.user);
+      navigate("/", { replace: true });
     } catch (err) {
-      if (err.response) {
-        toast.error(err.response.data.message);
-      }
+      toast.error(
+        err.response?.data?.message || "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }

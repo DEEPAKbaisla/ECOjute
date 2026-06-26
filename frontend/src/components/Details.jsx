@@ -12,11 +12,51 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "./ui/button";
-function Details() {
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
+import { toast } from "sonner";
+function Details() {
+  
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubscribeNewsletter = async (e) => {
+    e.preventDefault();
+
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("source", "Homepage");
+      formData.append("consent", consent);
+
+      const response = await fetch(import.meta.env.VITE_GOOGLE_SHEET_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Successfully subscribed! 🌿");
+
+        setName("");
+        setEmail("");
+        setConsent(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
@@ -186,21 +226,109 @@ function Details() {
             metrics, and stories directly from the Hooghly collective tea rooms.
           </p>
 
-          <form
-            // onSubmit={handleSubscribeNewsletter}
-            className="mt-6 flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+          {/* <form
+            onSubmit={handleSubscribeNewsletter}
+            className="mt-6 flex flex-row gap-2 max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Your Name"
+              required
+              value={name}
+              className="flex-1 px-4 py-2.5 bg-background border border-border rounded text-xs focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
+              onChange={(e) => setName(e.target.value)}
+            />
             <input
               type="email"
               required
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              placeholder="Enter email coordinate"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               className="flex-1 px-4 py-2.5 bg-background border border-border rounded text-xs focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
             />
+            <label className="flex items-start gap-2 mt-3 text-xs">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+              />
+              <span>I agree to receive updates from EcoJute.</span>
+            </label>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="bg-foreground text-background hover:opacity-80 text-xs uppercase font-extrabold tracking-wider px-6 py-2.5 rounded transition-transform active:scale-95 duration-100 cursor-pointer h-10 shadow-md whitespace-nowrap">
-              Subscribe
+              {isSubmitting ? "Subscribing..." : "Subscribe"}
+            </button>
+          </form> */}
+          <form
+            onSubmit={handleSubscribeNewsletter}
+            className="mt-6 max-w-lg mx-auto space-y-4">
+            {/* Inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="w-full px-4 py-3 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-4 py-3 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            {/* Consent */}
+            <label className="flex items-start gap-3 text-xs text-muted-foreground leading-relaxed cursor-pointer">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+                className="mt-0.5 h-4 w-4 accent-primary shrink-0"
+              />
+
+              <span>
+                I agree to receive product launches, sustainability stories, and
+                exclusive EcoJute offers. You can unsubscribe anytime.
+              </span>
+            </label>
+
+            {/* Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto sm:px-8 h-11 bg-foreground text-background rounded-md text-sm font-bold uppercase tracking-wide hover:opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mx-auto">
+              {isSubmitting && (
+                <svg
+                  className="h-4 w-4 animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+              )}
+
+              {isSubmitting ? "Subscribing..." : "Subscribe"}
             </button>
           </form>
 

@@ -2,7 +2,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const GoogleSignIn = () => {
   const { authUser, setAuthUser } = useAuth();

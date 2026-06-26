@@ -1,46 +1,5 @@
-// import { useForm } from "react-hook-form";
-
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import axios from "axios";
-// import toast from "react-hot-toast";
-// import { useNavigate } from "react-router-dom";
-
-// function AddBag() {
-//   const { register, handleSubmit } = useForm();
-//   const navigate = useNavigate();
-
-//   const onSubmit = async (data) => {
-//     try {
-//       await axios.post("/api/bags", data);
-//       toast.success("Bag added successfully");
-//       navigate("/admin/manage-bags");
-//     } catch (err) {
-//       toast.error("Error adding bag");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2 className="text-xl font-semibold mb-4">Add New Bag</h2>
-
-//       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
-//         <Input placeholder="Bag Name" {...register("name")} />
-//         <Input placeholder="Price" {...register("price")} />
-//         <Input placeholder="Image URL" {...register("image")} />
-
-//         <Button type="submit" className="w-full">
-//           Add Bag
-//         </Button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default AddBag;
-
 import { useState } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axios";
 import { Loader2 } from "lucide-react";
@@ -94,37 +53,6 @@ const AddBag = () => {
       return;
     }
 
-    // try {
-    //   const formData = new FormData();
-    //   // Append scalar fields
-    //   formData.append("name", data.name);
-    //   formData.append("description", data.description);
-    //   formData.append("price", data.price);
-    //   formData.append("category", data.category);
-    //   formData.append("stock", data.stock);
-
-    //   // Append images with field name "images" to match backend
-    //   data.images.forEach((file) => {
-    //     formData.append("images", file);
-    //   });
-
-    //   const res = await api.post("/api/bags", formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
-
-    //   if (res.data.success) {
-    //     toast.success("Bag uploaded successfully!");
-    //     navigate("/admin/manage-bags");
-    //   } else {
-    //     toast.error(res.data.message || "Something went wrong!");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error("Upload failed");
-    // }
-
     try {
       setLoading(true);
       const formData = new FormData();
@@ -156,6 +84,7 @@ const AddBag = () => {
           images: [],
         });
         setPreviews([]);
+        navigate("/admin/manage-bags");
       } else {
         toast.error(res.data.message || "Something went wrong!");
       }
@@ -237,17 +166,6 @@ const AddBag = () => {
             </div>
 
             {/* Category */}
-            {/* <div className="space-y-2">
-              <Label>Category</Label>
-              <Input
-                type="text"
-                name="category"
-                value={data.category}
-                onChange={handleChange}
-                placeholder="Travel, Laptop, School..."
-              />
-            </div> */}
-            
             <div className="space-y-2">
               <label className="block font-medium mb-1">Category *</label>
 

@@ -1,8 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import "./index.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 // ✅ Home loads immediately — has your LCP banner image
 import Home from "./components/Home/Home";
@@ -10,7 +10,6 @@ import Home from "./components/Home/Home";
 // ✅ Everything else lazy loaded
 const Signup = lazy(() => import("./components/signup/Signup"));
 const Login = lazy(() => import("./components/Login"));
-// const UploadProduct = lazy(() => import("./components/Add bags/UploadProduct"));
 const BagList = lazy(() => import("./components/product/Bags"));
 const Cart = lazy(() => import("./components/cart/cart"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
@@ -27,7 +26,9 @@ const PageLoader = () => (
     <div className="flex flex-col items-center space-y-4">
       <div className="relative flex items-center justify-center">
         <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-green-700 border-t-transparent" />
-        <span className="absolute text-xl font-semibold text-green-700 font-serif">🌿</span>
+        <span className="absolute text-xl font-semibold text-green-700 font-serif">
+          🌿
+        </span>
       </div>
       <p className="text-sm font-semibold text-[#203527] dark:text-[#a3b899] uppercase tracking-widest animate-pulse font-serif">
         EcoJute
@@ -35,7 +36,6 @@ const PageLoader = () => (
     </div>
   </div>
 );
-
 
 function App() {
   const { authUser } = useAuth();
@@ -48,11 +48,6 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
 
-          {/* <Route
-            path="/uploadProduct"
-            element={authUser ? <UploadProduct /> : <Navigate to="/signup" />}
-          /> */}
-          
           <Route
             path="/products"
             element={authUser ? <BagList /> : <Navigate to="/signup" />}
@@ -75,7 +70,7 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
-      <Toaster />
+      <Toaster richColors position="top-right" />
     </>
   );
 }

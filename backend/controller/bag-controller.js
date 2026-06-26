@@ -1,7 +1,7 @@
 import { bag } from "../models/bag-model.js";
 import { uploadCloud } from "../utils/Cloud.js";
 import mongoose from "mongoose";
-
+import { v2 as cloudinary } from "cloudinary";
 
 export const addBag = async (req, res) => {
   try {
@@ -20,7 +20,8 @@ export const addBag = async (req, res) => {
     for (let file of req.files) {
       const result = await uploadCloud(file);
 
-      uploadedImages.push(result.secure_url);}
+      uploadedImages.push(result.secure_url);
+    }
 
     const newBag = await bag.create({
       name,
@@ -28,7 +29,7 @@ export const addBag = async (req, res) => {
       price,
       category,
       stock,
-      images: uploadedImages,  // 👈 array save
+      images: uploadedImages, // 👈 array save
     });
 
     res.json({
@@ -94,7 +95,10 @@ export const updateBag = async (req, res) => {
     }
 
     // Only update if existingImages was explicitly sent or new images were uploaded
-    if (req.body.existingImages !== undefined || (req.files && req.files.length > 0)) {
+    if (
+      req.body.existingImages !== undefined ||
+      (req.files && req.files.length > 0)
+    ) {
       bagData.images = [...imagesToKeep, ...newUploadedImages];
     }
 
@@ -103,7 +107,8 @@ export const updateBag = async (req, res) => {
     bagData.description = description || bagData.description;
     bagData.price = price || bagData.price;
     bagData.category = category || bagData.category;
-    bagData.stock = stock !== undefined ? (stock === 'true' || stock === true) : bagData.stock;
+    bagData.stock =
+      stock !== undefined ? stock === "true" || stock === true : bagData.stock;
 
     await bagData.save();
 
@@ -124,7 +129,7 @@ export const updateBag = async (req, res) => {
 export const updateBagStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { stock } = req.body; 
+    const { stock } = req.body;
 
     const updatedBag = await bag.findByIdAndUpdate(
       id,
@@ -148,7 +153,7 @@ export const updateBagStatus = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Status update failed",
-      error:error.message ,
+      error: error.message,
     });
   }
 };
@@ -157,24 +162,56 @@ export const deleteBag = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedBag = await bag.findByIdAndDelete(id);
+    // Find bag first
+    const bagData = await bag.findById(id);
 
-    if (!deletedBag) {
+    if (!bagData) {
       return res.status(404).json({
         success: false,
         message: "Bag not found",
       });
     }
 
+    // Delete all Cloudinary images
+    for (const imageUrl of bagData.images) {
+      try {
+        // Remove query params if any
+        const cleanUrl = imageUrl.split("?")[0];
+
+        // Remove extension (.jpg, .png, .webp...)
+        const withoutExtension = cleanUrl.substring(
+          0,
+          cleanUrl.lastIndexOf("."),
+        );
+
+        // Get everything after "/upload/"
+        const path = withoutExtension.split("/upload/")[1];
+
+        // Remove version (v123456789/)
+        const publicId = path.replace(/^v\d+\//, "");
+
+        console.log("Deleting:", publicId);
+
+        await cloudinary.uploader.destroy(publicId);
+      } catch (err) {
+        console.error("Failed to delete image:", imageUrl, err);
+      }
+    }
+
+    // Delete bag document
+    await bag.findByIdAndDelete(id);
+
     res.json({
       success: true,
-      message: "Bag deleted successfully",
+      message: "Bag and images deleted successfully",
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       message: "Delete failed",
-      error,
+      error: error.message,
     });
   }
 };
@@ -183,10 +220,11 @@ export const getBagById = async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-  return res.status(400).json({
-    success: false,
-    message: "Invalid bag ID",
-  });}
+      return res.status(400).json({
+        success: false,
+        message: "Invalid bag ID",
+      });
+    }
 
     const singleBag = await bag.findById(id);
 

@@ -1,5 +1,5 @@
 import { memo, useCallback, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import api from "@/api/axios";
 import Navbar from "../Navbar";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -22,40 +22,6 @@ const fetchBags = async ({ signal }) => {
 
 // ✅ Memoized card — only re-renders when bag/cartItem/handler changes
 const BagCard = memo(({ bag, cartItem, onAddToCart }) => (
-  // <Card className="hover:shadow-lg hover:scale-103 transition-all duration-200">
-  //   <CardContent className="p-4">
-  //     <img
-  //       src={bag.images?.[0]}
-  //       alt={`Eco friendly jute bag ${bag.name} reusable shopping bag India`}
-  //       className="w-full h-48 object-contain rounded-md bg-gray-100"
-  //       loading="lazy"
-  //       width={300}
-  //       height={192}
-  //       onError={(e) => {
-  //         e.target.src = "/placeholder-bag.png";
-  //       }}
-  //     />
-  //     <div className="mt-4 space-y-1">
-  //       <h2 className="font-semibold text-lg">{bag.name}</h2>
-  //       <p className="text-sm text-muted-foreground">{bag.category}</p>
-  //       <p className="font-bold text-lg mt-2">₹{bag.price}</p>
-  //     </div>
-  //   </CardContent>
-  //   <CardFooter>
-  //     <Button
-  //       className="w-full"
-  //       variant={cartItem ? "secondary" : "default"}
-  //       onClick={() => onAddToCart(bag)}>
-  //       {cartItem ? (
-  //         <span className="font-semibold text-white dark:text-emerald-300">
-  //           ✓ Added to Cart
-  //         </span>
-  //       ) : (
-  //         "Add to Cart"
-  //       )}
-  //     </Button>
-  //   </CardFooter>
-  // </Card>
   <Card className="group overflow-hidden rounded-3xl border border-border/55 bg-card shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
     {/* Image Section */}
     <div className="relative">
