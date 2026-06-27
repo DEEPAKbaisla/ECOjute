@@ -2,17 +2,10 @@ import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../Navbar";
 import api from "../../api/axios";
-// import toast from "react-hot-toast";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,8 +76,8 @@ const Cart = () => {
         modal: {
           ondismiss: function () {
             setLoading(false);
-          }
-        }
+          },
+        },
       };
 
       const rzp = new window.Razorpay(options);
@@ -118,7 +111,7 @@ const Cart = () => {
 
         <div className="grid lg:grid-cols-[2fr_1fr] gap-12">
           {/* LEFT SIDE */}
-          <div >
+          <div>
             {cart.length === 0 ? (
               <Card className="text-center p-10 ">
                 <CardContent>
@@ -197,117 +190,117 @@ const Cart = () => {
           </div>
 
           {/* RIGHT SIDE */}
-            <Card className="h-fit sticky top-24">
-              <CardContent className="p-8">
-                <h3 className="uppercase tracking-[3px] text-sm font-semibold mb-8">
-                  Order Summary
-                </h3>
+          <Card className="h-fit sticky top-24">
+            <CardContent className="p-8">
+              <h3 className="uppercase tracking-[3px] text-sm font-semibold mb-8">
+                Order Summary
+              </h3>
 
-                {/* ADDRESS */}
-                <div className="space-y-3 mb-8">
-                  <Input
-                    placeholder="Full Name"
-                    disabled={loading}
-                    onChange={(e) =>
-                      setAddress({
-                        ...address,
-                        name: e.target.value,
-                      })
-                    }
-                  />
+              {/* ADDRESS */}
+              <div className="space-y-3 mb-8">
+                <Input
+                  placeholder="Full Name"
+                  disabled={loading}
+                  onChange={(e) =>
+                    setAddress({
+                      ...address,
+                      name: e.target.value,
+                    })
+                  }
+                />
 
-                  <Input
-                    placeholder="Phone Number"
-                    disabled={loading}
-                    onChange={(e) =>
-                      setAddress({
-                        ...address,
-                        phone: e.target.value,
-                      })
-                    }
-                  />
+                <Input
+                  placeholder="Phone Number"
+                  disabled={loading}
+                  onChange={(e) =>
+                    setAddress({
+                      ...address,
+                      phone: e.target.value,
+                    })
+                  }
+                />
 
-                  <Textarea
-                    placeholder="Full Address"
-                    disabled={loading}
-                    onChange={(e) =>
-                      setAddress({
-                        ...address,
-                        addressLine: e.target.value,
-                      })
-                    }
-                  />
+                <Textarea
+                  placeholder="Full Address"
+                  disabled={loading}
+                  onChange={(e) =>
+                    setAddress({
+                      ...address,
+                      addressLine: e.target.value,
+                    })
+                  }
+                />
 
-                  <Input
-                    placeholder="City"
-                    disabled={loading}
-                    onChange={(e) =>
-                      setAddress({
-                        ...address,
-                        city: e.target.value,
-                      })
-                    }
-                  />
+                <Input
+                  placeholder="City"
+                  disabled={loading}
+                  onChange={(e) =>
+                    setAddress({
+                      ...address,
+                      city: e.target.value,
+                    })
+                  }
+                />
 
-                  <Input
-                    placeholder="Pincode"
-                    disabled={loading}
-                    onChange={(e) =>
-                      setAddress({
-                        ...address,
-                        pincode: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                <Input
+                  placeholder="Pincode"
+                  disabled={loading}
+                  onChange={(e) =>
+                    setAddress({
+                      ...address,
+                      pincode: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-                <Separator />
+              {/* <Separator /> */}
 
-                <div className="space-y-4 py-6">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>₹{total}</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span className="text-green-700">Free</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span>Taxes</span>
-                    <span>₹0</span>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between text-2xl font-serif py-6">
-                  <span>Total</span>
+              <div className="space-y-4 py-6">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
                   <span>₹{total}</span>
                 </div>
 
-                <Button
-                  onClick={handlePayment}
-                  disabled={cart.length === 0 || loading}
-                  className="w-full h-12 rounded-none bg-green-900 hover:bg-green-800 flex items-center justify-center gap-2">
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      PROCESSING...
-                    </>
-                  ) : (
-                    "CHECKOUT"
-                  )}
-                </Button>
-
-                <div className="mt-6 text-xs text-muted-foreground space-y-3">
-                  <p>🔒 Secure encrypted payment</p>
-                  <p>♻ Eco-friendly packaging</p>
-                  <p>🚚 Delivery across India</p>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span className="text-green-700">Free</span>
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="flex justify-between">
+                  <span>Taxes</span>
+                  <span>₹0</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between text-2xl font-serif py-6">
+                <span>Total</span>
+                <span>₹{total}</span>
+              </div>
+
+              <Button
+                onClick={handlePayment}
+                disabled={cart.length === 0 || loading}
+                className="w-full h-12 rounded-none bg-green-900 hover:bg-green-800 flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    PROCESSING...
+                  </>
+                ) : (
+                  "CHECKOUT"
+                )}
+              </Button>
+
+              <div className="mt-6 text-xs text-muted-foreground space-y-3">
+                <p>🔒 Secure encrypted payment</p>
+                <p>♻ Eco-friendly packaging</p>
+                <p>🚚 Delivery across India</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>

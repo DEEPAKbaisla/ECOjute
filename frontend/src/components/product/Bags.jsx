@@ -15,7 +15,6 @@ const fetchBags = async ({ signal }) => {
   const startTime = performance.now();
   const response = await api.get("/api/bags", { signal });
   const endTime = performance.now();
-  // console.log(`⚡ Fetch time for bags: ${endTime - startTime} ms`);
   if (!response.data.success) throw new Error("Failed to fetch bags");
   return response.data.data;
 };
