@@ -8,6 +8,9 @@ import { Toaster } from "@/components/ui/sonner";
 import Home from "./components/Home/Home";
 
 // ✅ Everything else lazy loaded
+const ResetPassword = lazy(() => import("./components/ResetPassword"));
+const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
+const VerifyOtp = lazy(() => import("./components/VerifyOTP"));
 const Signup = lazy(() => import("./components/signup/Signup"));
 const Login = lazy(() => import("./components/Login"));
 const BagList = lazy(() => import("./components/product/Bags"));
@@ -46,7 +49,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
+
           <Route path="/login" element={<Login />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           <Route
             path="/products"

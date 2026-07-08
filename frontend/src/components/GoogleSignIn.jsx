@@ -36,10 +36,13 @@ const GoogleSignIn = () => {
   };
 
   return (
-    <GoogleLogin
-      onSuccess={handleSuccess}
-      onError={() => console.log("Login Failed")}
-    />
+    <div className="w-full">
+      <GoogleLogin
+        onSuccess={handleSuccess}
+        onError={() => console.log("Login Failed")}
+        width={395}
+      />
+    </div>
   );
 };
 
