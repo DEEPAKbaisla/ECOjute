@@ -13,11 +13,14 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MONGODB_URI;
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://ec-ojute-9nt6.vercel.app",
-  "https://ec-ojute.vercel.app"
-];
+// const allowedOrigins = [
+//   // "http://localhost:5173",
+//   // "https://ec-ojute-9nt6.vercel.app",
+//   // "https://ec-ojute.vercel.app"
+// ];
+
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const allowedOrigins = [FRONTEND_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {

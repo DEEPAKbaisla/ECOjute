@@ -11,6 +11,15 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationOTPExpires: {
+      type: Date,
+      default: null,
+    },
     password: {
       type: String,
       required: function () {
@@ -38,6 +47,15 @@ const userSchema = mongoose.Schema(
     },
     mobile: {
       type: String,
+      default: null,
+    },
+    passwordResetToken: {
+      type: String,
+      default: null,
+    },
+
+    passwordResetExpires: {
+      type: Date,
       default: null,
     },
   },
