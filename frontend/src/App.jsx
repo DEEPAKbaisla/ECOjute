@@ -1,6 +1,6 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import "./index.css";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -42,6 +42,14 @@ const PageLoader = () => (
 
 function App() {
   const { authUser } = useAuth();
+  const location = useLocation();
+  const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+
+  useEffect(() => {
+    window.gtag?.("config", GA_MEASUREMENT_ID, {
+      page_path: location.pathname,
+    });
+  }, [location]);
 
   return (
     <>

@@ -32,54 +32,13 @@ function VerifyOtp() {
 
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
-  console.log("VerifyOtp mounted");
-  console.log(sessionStorage.getItem("verifyEmail"));
+ 
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
       otp: "",
     },
   });
-
-  //   const onSubmit = async (data) => {
-  //     try {
-  //       setLoading(true);
-
-  //       const res = await api.post("/api/user/verify-otp", {
-  //         email,
-  //         otp: data.otp,
-  //       });
-
-  //       toast.success(res.data.message || "Email verified successfully");
-
-  //       navigate("/login", { replace: true });
-  //     } catch (error) {
-  //       toast.error(error.response?.data?.message || "Invalid OTP");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-//   const onSubmit = async (data) => {
-//     try {
-//       setLoading(true);
-
-//       const res = await api.post("/api/user/verify-otp", {
-//         email,
-//         otp: data.otp,
-//       });
-
-//       toast.success(res.data.message);
-
-//       sessionStorage.removeItem("verifyEmail");
-
-//       navigate("/login", { replace: true });
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || "Invalid OTP");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
 
 const onSubmit = async (data) => {
   try {
