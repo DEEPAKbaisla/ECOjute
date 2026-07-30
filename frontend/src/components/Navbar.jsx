@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import Logout from "./Logout";
-import { Handbag, House, Moon, ShieldUser, ShoppingCart, Sun } from "lucide-react";
+import { Handbag, Leaf, Moon, ShieldUser, ShoppingCart, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
-import { Button } from "@/components/ui/button";
-
 
 function Navbar() {
   const { getCartCount } = useCart();
@@ -33,24 +31,25 @@ function Navbar() {
         {/* Logo */}
         <a
           href="/"
-          className="garamond text-2xl font-bold text-[#203527] hover:text-[#4D6453]"
+          className="garamond text-2xl font-bold text-foreground hover:text-primary inline-flex items-center gap-2"
         >
+          <Leaf size={22} className="text-primary" />
           EcoJute
         </a>
 
         {/* Links */}
         <div className="flex items-center gap-4 md:gap-6">
-          <a
+          {/* <a
             href="/"
             className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
           >
-            <House />
-          </a>
+            <Handbag />
+          </a> */}
           <a
             href="/products"
             className="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-primary md:block"
           >
-             <Handbag/>
+            <Handbag />
           </a>
 
           {authUser?.role === "USER" && (
@@ -73,17 +72,15 @@ function Navbar() {
               className="text-foreground/80 transition-colors hover:text-primary "
               href="/admin"
             >
-              <ShieldUser/>
+              <ShieldUser />
             </a>
           )}
 
           {/* Theme Toggle */}
-          {/* <Button
+          <button
             type="button"
-            variant="outline"
-            size="icon"
             onClick={toggleTheme}
-            className="border-border text-foreground/80 hover:border-primary hover:bg-accent hover:text-accent-foreground"
+            className="h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary flex cursor-pointer"
             aria-label="Toggle theme"
           >
             {theme === "light" ? (
@@ -91,14 +88,17 @@ function Navbar() {
             ) : (
               <Sun className="h-5 w-5" />
             )}
-          </Button> */}
+          </button>
 
           {authUser ? (
             <Logout />
           ) : (
-            <Button variant="default" size="sm" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
+            <Link
+              to="/login"
+              className="bg-foreground text-background hover:opacity-90 px-4 py-2 rounded-md text-sm font-semibold transition"
+            >
+              Login
+            </Link>
           )}
         </div>
       </div>

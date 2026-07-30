@@ -1,55 +1,60 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-
-const featuredBags = [
-  {
-    id: 1,
-    name: "Urban Jute Backpack",
-    category: "Accessories",
-    images: [
-      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782202957/urban_dqoxuv.png",
-    ],
-    savedKg: 2500,
-  },
-  {
-    id: 2,
-    name: "Luna Circle Pouch",
-    category: "Accessories",
-    images: [
-      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782203125/luna_circle_oicptw.png",
-    ],
-    savedKg: 1800,
-  },
-  {
-    id: 3,
-    name: "Golden-Weave Tote",
-    category: "Bags",
-    images: [
-      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782385457/totef_un3orx.png",
-    ],
-    savedKg: 3200,
-  },
-  {
-    id: 4,
-    name: "Organic Rug Runner",
-    category: "Home",
-    images: [
-      "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782203146/hema_jute_ixz2gj.png",
-    ],
-    savedKg: 4500,
-  },
-];
+import { motion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 
 const FeaturedBagCard = () => {
+  const featuredBags = [
+    {
+      id: 1,
+      name: "Urban Jute Backpack",
+      category: "Accessories",
+      images: [
+        "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782202957/urban_dqoxuv.png",
+      ],
+      savedKg: 2500,
+    },
+    {
+      id: 2,
+      name: "Luna Circle Pouch",
+      category: "Accessories",
+      images: [
+        "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782203125/luna_circle_oicptw.png",
+      ],
+      savedKg: 1800,
+    },
+    {
+      id: 3,
+      name: "Golden-Weave Tote",
+      category: "Bags",
+      images: [
+        "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782385457/totef_un3orx.png",
+      ],
+      savedKg: 3200,
+    },
+    {
+      id: 4,
+      name: "Organic Rug Runner",
+      category: "Home",
+      images: [
+        "https://res.cloudinary.com/dxmmbkhq8/image/upload/v1782203146/hema_jute_ixz2gj.png",
+      ],
+      savedKg: 4500,
+    },
+  ];
   return (
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-6">
-        <div className="flex justify-between items-end gap-4 mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-between items-end gap-4 mb-3">
           <div className="min-w-0">
             <h2 className="text-lg md:text-2xl font-serif font-bold whitespace-nowrap text-foreground">
               Featured Handlooms
             </h2>
-
             <p className="mt-1 text-[12px] sm:text-[14px] uppercase text-muted-foreground">
               Curated Minimal Drops
             </p>
@@ -57,11 +62,13 @@ const FeaturedBagCard = () => {
 
           <Link
             to="/products"
-            className="shrink-0 text-sm sm:text-base font-medium underline text-primary hover:text-primary/80 transition-colors">
+            className="shrink-0 text-sm sm:text-base font-medium underline text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-1">
             View Boutique Grid
+            <ArrowUpRight size={14} />
           </Link>
-        </div>
+        </motion.div>
         <hr className="border-border mb-8 mt-2" />
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredBags.map((bag) => (

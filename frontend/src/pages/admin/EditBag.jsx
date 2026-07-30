@@ -17,7 +17,14 @@ const EditBag = () => {
     name: "",
     description: "",
     price: "",
+    mrp: "",
     category: "",
+    stock: 1,
+    material: "",
+    weight: "",
+    dimensionsWidth: "",
+    dimensionsHeight: "",
+    dimensionsDepth: "",
   });
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
@@ -29,14 +36,21 @@ const EditBag = () => {
       try {
         setFetching(true);
         const res = await api.get(`/api/bags/${id}`);
-        const bag = res.data.bag;
+        const bagData = res.data.bag;
         setData({
-          name: bag?.name || "",
-          description: bag?.description || "",
-          price: bag?.price || "",
-          category: bag?.category || "",
+          name: bagData?.name || "",
+          description: bagData?.description || "",
+          price: bagData?.price || "",
+          mrp: bagData?.mrp || "",
+          category: bagData?.category || "",
+          stock: bagData?.stock ?? 0,
+          material: bagData?.material || "",
+          weight: bagData?.weight || "",
+          dimensionsWidth: bagData?.dimensions?.width || "",
+          dimensionsHeight: bagData?.dimensions?.height || "",
+          dimensionsDepth: bagData?.dimensions?.depth || "",
         });
-        setExistingImages(bag?.images || []);
+        setExistingImages(bagData?.images || []);
       } catch (err) {
         toast.error("Failed to load bag");
       } finally {
@@ -47,8 +61,8 @@ const EditBag = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setData({ ...data, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleImageChange = (e) => {
@@ -76,20 +90,24 @@ const EditBag = () => {
       formData.append("name", data.name);
       formData.append("description", data.description);
       formData.append("price", data.price);
+      formData.append("mrp", data.mrp || data.price);
       formData.append("category", data.category);
-
+      formData.append("stock", data.stock);
+      formData.append("material", data.material);
+      formData.append("weight", data.weight);
+      formData.append("dimensions", JSON.stringify({
+        width: data.dimensionsWidth,
+        height: data.dimensionsHeight,
+        depth: data.dimensionsDepth,
+      }));
       formData.append("existingImages", JSON.stringify(existingImages));
 
       if (newImages.length > 0) {
-        newImages.forEach((file) => {
-          formData.append("images", file);
-        });
+        newImages.forEach((file) => formData.append("images", file));
       }
 
       const res = await api.put(`/api/bags/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (res.data.success) {
@@ -120,138 +138,104 @@ const EditBag = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="w-full space-y-6">
-              {/* Name */}
               <div className="space-y-2">
                 <Label>Bag Name *</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  disabled={loading}
-                  value={data.name}
-                  onChange={handleChange}
-                  placeholder="Enter bag name"
-                  required
-                />
+                <Input type="text" name="name" disabled={loading} value={data.name} onChange={handleChange} required />
               </div>
 
-              {/* Description */}
               <div className="space-y-2">
                 <Label>Description</Label>
-                <Textarea
-                  name="description"
-                  disabled={loading}
-                  value={data.description}
-                  onChange={handleChange}
-                  placeholder="Enter description"
-                />
+                <Textarea name="description" disabled={loading} value={data.description} onChange={handleChange} />
               </div>
 
-              {/* Price */}
-              <div className="space-y-2">
-                <Label>Price *</Label>
-                <Input
-                  type="number"
-                  name="price"
-                  disabled={loading}
-                  value={data.price}
-                  onChange={handleChange}
-                  placeholder="Enter price"
-                  required
-                />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Price (Selling) *</Label>
+                  <Input type="number" name="price" disabled={loading} value={data.price} onChange={handleChange} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>MRP (Original)</Label>
+                  <Input type="number" name="mrp" disabled={loading} value={data.mrp} onChange={handleChange} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Stock</Label>
+                  <select name="stock" disabled={loading} value={data.stock} onChange={(e) => setData({ ...data, stock: Number(e.target.value) })} className="w-full rounded-md border px-3 py-2 bg-background" required>
+                    <option value={1}>In Stock</option>
+                    <option value={0}>Out of Stock</option>
+                  </select>
+                </div>
               </div>
 
-              {/* Category */}
-              <div className="space-y-2">
-                <Label>Category *</Label>
-                <select
-                  name="category"
-                  disabled={loading}
-                  value={data.category}
-                  onChange={handleChange}
-                  className="w-full rounded-md border px-3 py-2 bg-background"
-                  required>
-                  <option value="">Select Category</option>
-                  <option value="bags">Bags</option>
-                  <option value="accessories">Accessories</option>
-                  <option value="home">Home</option>
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Category *</Label>
+                  <select name="category" disabled={loading} value={data.category} onChange={handleChange} className="w-full rounded-md border px-3 py-2 bg-background" required>
+                    <option value="">Select Category</option>
+                    <option value="bags">Bags</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="home">Home</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Material</Label>
+                  <Input type="text" name="material" disabled={loading} value={data.material} onChange={handleChange} placeholder="e.g. Organic Jute" />
+                </div>
               </div>
 
-              {/* Image upload */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label>Weight</Label>
+                  <Input type="text" name="weight" disabled={loading} value={data.weight} onChange={handleChange} placeholder="e.g. 420 g" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Width</Label>
+                  <Input type="text" name="dimensionsWidth" disabled={loading} value={data.dimensionsWidth} onChange={handleChange} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Height</Label>
+                  <Input type="text" name="dimensionsHeight" disabled={loading} value={data.dimensionsHeight} onChange={handleChange} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Depth</Label>
+                  <Input type="text" name="dimensionsDepth" disabled={loading} value={data.dimensionsDepth} onChange={handleChange} />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label>Add More Images</Label>
-                <Input
-                  type="file"
-                  name="images"
-                  disabled={loading}
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageChange}
-                />
+                <Input type="file" name="images" disabled={loading} accept="image/*" multiple onChange={handleImageChange} />
               </div>
 
-              {/* Previews and Image Manager Grid */}
               {(existingImages.length > 0 || newImages.length > 0) && (
                 <div className="space-y-2">
                   <Label>Current Images & New Uploads</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
-                    {/* Existing Images */}
                     {existingImages.map((src, index) => (
                       <div key={`existing-${index}`} className="relative border rounded-md overflow-hidden aspect-square h-28 w-28 bg-gray-50 shadow-sm">
-                        <img
-                          src={src}
-                          alt={`Existing ${index + 1}`}
-                          className="h-full w-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          disabled={loading}
-                          onClick={() => handleRemoveExisting(index)}
-                          className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5"
-                          title="Remove existing image"
-                        >
+                        <img src={src} alt={`Existing ${index + 1}`} className="h-full w-full object-cover" />
+                        <button type="button" disabled={loading} onClick={() => handleRemoveExisting(index)} className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5">
                           <X className="h-3 w-3" />
                         </button>
                         <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">Saved</span>
                       </div>
                     ))}
-
-                    {/* New Images */}
-                    {newImages.map((file, index) => {
-                      const url = URL.createObjectURL(file);
-                      return (
-                        <div key={`new-${index}`} className="relative border rounded-md overflow-hidden aspect-square h-28 w-28 bg-gray-50 shadow-sm">
-                          <img
-                            src={url}
-                            alt={`New ${index + 1}`}
-                            className="h-full w-full object-cover"
-                          />
-                          <button
-                            type="button"
-                            disabled={loading}
-                            onClick={() => handleRemoveNew(index)}
-                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5"
-                            title="Remove selected image"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                          <span className="absolute bottom-1 left-1 bg-emerald-700 text-white text-[9px] px-1 rounded">New</span>
-                        </div>
-                      );
-                    })}
+                    {newImages.map((file, index) => (
+                      <div key={`new-${index}`} className="relative border rounded-md overflow-hidden aspect-square h-28 w-28 bg-gray-50 shadow-sm">
+                        <img src={URL.createObjectURL(file)} alt={`New ${index + 1}`} className="h-full w-full object-cover" />
+                        <button type="button" disabled={loading} onClick={() => handleRemoveNew(index)} className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-90 transition shadow cursor-pointer flex items-center justify-center h-5 w-5">
+                          <X className="h-3 w-3" />
+                        </button>
+                        <span className="absolute bottom-1 left-1 bg-emerald-700 text-white text-[9px] px-1 rounded">New</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
               <Button type="submit" className="w-full md:w-auto" disabled={loading}>
                 {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Updating Bag...
-                  </>
-                ) : (
-                  "Update Bag"
-                )}
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating Bag...</>
+                ) : "Update Bag"}
               </Button>
             </form>
           )}

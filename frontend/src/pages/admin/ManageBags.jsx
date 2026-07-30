@@ -130,15 +130,22 @@ function ManageBags() {
                   </div>
                 </div>
 
-                <span
-                  className={`inline-flex w-fit rounded-full px-2 py-0.5 text-xs font-semibold ${
-                    bag.stock
-                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200"
-                      : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200"
-                  }`}
-                >
-                  {bag.stock ? "In stock" : "Out of stock"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`inline-flex w-fit rounded-full px-2 py-0.5 text-xs font-semibold ${
+                      bag.stock > 0
+                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200"
+                        : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200"
+                    }`}
+                  >
+                    {bag.stock > 0 ? "In Stock" : "Out of stock"}
+                  </span>
+                  {bag.isFeatured && (
+                    <span className="inline-flex w-fit rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200 px-2 py-0.5 text-xs font-semibold">
+                      Featured
+                    </span>
+                  )}
+                </div>
               </CardContent>
 
               <CardFooter className="mt-3 flex flex-wrap items-center justify-end gap-2 p-0 pt-3">

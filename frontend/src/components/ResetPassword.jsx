@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Leaf, Loader2 } from "lucide-react";
 
 import api from "@/api/axios";
 
@@ -18,9 +18,7 @@ import {
 
 function ResetPassword() {
   const { token } = useParams();
-
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,16 +38,11 @@ function ResetPassword() {
 
     try {
       setLoading(true);
-
       const res = await api.post(`/api/user/reset-password/${token}`, {
         newPassword: data.newPassword,
       });
-
       toast.success(res.data.message);
-
-      navigate("/login", {
-        replace: true,
-      });
+      navigate("/login", { replace: true });
     } catch (error) {
       toast.error(error.response?.data?.message || "Unable to reset password");
     } finally {
@@ -58,88 +51,86 @@ function ResetPassword() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center dark:bg-slate-900 p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
+    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="text-center">
+          <a href="/" className="garamond text-3xl font-bold text-foreground inline-flex items-center gap-2">
+            <Leaf className="h-6 w-6 text-primary" />
+            EcoJute
+          </a>
+        </div>
 
-          <CardDescription>Enter your new password.</CardDescription>
-        </CardHeader>
+        <Card>
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-xl">Reset Password</CardTitle>
+            <CardDescription>Enter your new password.</CardDescription>
+          </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* New Password */}
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="New Password"
+                  className="pr-10"
+                  {...register("newPassword", {
+                    required: "Password is required",
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/,
+                      message: "Password must be strong.",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+                {errors.newPassword && (
+                  <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>
+                )}
+              </div>
 
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="New Password"
-                className="pr-10"
-                {...register("newPassword", {
-                  required: "Password is required",
-                  pattern: {
-                    value:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/,
-                    message: "Password must be strong.",
-                  },
-                })}
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  className="pr-10"
+                  {...register("confirmPassword", {
+                    required: "Confirm password is required",
+                    validate: (value) =>
+                      value === watch("newPassword") || "Passwords do not match",
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+                )}
+              </div>
 
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-5 -translate-y-1/2">
-                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-              </button>
-
-              {errors.newPassword && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.newPassword.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password */}
-
-            <div className="relative">
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
-                className="pr-10"
-                {...register("confirmPassword", {
-                  required: "Confirm password is required",
-                  validate: (value) =>
-                    value === watch("newPassword") || "Passwords do not match",
-                })}
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-5 -translate-y-1/2">
-                {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-              </button>
-
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
-
-            <Button className="w-full" disabled={loading} type="submit">
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Resetting...
-                </>
-              ) : (
-                "Reset Password"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <Button className="w-full" disabled={loading} type="submit">
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Resetting...
+                  </>
+                ) : (
+                  "Reset Password"
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

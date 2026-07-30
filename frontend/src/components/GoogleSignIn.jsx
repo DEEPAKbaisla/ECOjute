@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
@@ -7,6 +8,15 @@ import { toast } from "sonner";
 const GoogleSignIn = () => {
   const { authUser, setAuthUser } = useAuth();
   const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const [width, setWidth] = useState(300);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const w = containerRef.current.offsetWidth;
+      if (w > 0) setWidth(Math.min(w, 400));
+    }
+  }, []);
 
   const handleSuccess = async (credentialResponse) => {
     try {
@@ -17,18 +27,10 @@ const GoogleSignIn = () => {
         },
       );
 
-      // Save token
       localStorage.setItem("token", res.data.token);
-
-      // Save user
       localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      // Update context state
       setAuthUser(res.data.user);
-
       toast.success("Login successful");
-
-      // Redirect
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -36,11 +38,15 @@ const GoogleSignIn = () => {
   };
 
   return (
-    <div className="w-full">
+    <div ref={containerRef} className="w-full flex justify-center">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={() => console.log("Login Failed")}
-        width={395}
+        theme="outline"
+        size="large"
+        text="continue_with"
+        shape="rectangular"
+        width={width}
       />
     </div>
   );
