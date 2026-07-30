@@ -1,6 +1,6 @@
 import { razorpay } from "../config/razorpay.js";
 import Order from "../models/orderModel.js";
-
+import { bag } from "../models/bag-model.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -13,14 +13,29 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    // 1️⃣ Create Razorpay Order
+    // Check stock availability
+    for (const item of cart) {
+      const product = await bag.findById(item._id);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Product "${item.name}" not found`,
+        });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient stock for "${product.name}". Available: ${product.stock}`,
+        });
+      }
+    }
+
     const razorpayOrder = await razorpay.orders.create({
-      amount: amount * 100, // Razorpay uses paise
+      amount: amount * 100,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     });
 
-    // 2️⃣ Prepare items for DB
     const orderItems = cart.map((item) => ({
       product: item._id,
       name: item.name,
@@ -29,15 +44,21 @@ export const createOrder = async (req, res) => {
       image: item.images?.[0],
     }));
 
-    // 3️⃣ Save Order in DB
     const newOrder = await Order.create({
-      user: req.user._id, // from auth middleware
+      user: req.user._id,
       items: orderItems,
       address,
       amount,
       razorpayOrderId: razorpayOrder.id,
       paymentStatus: "pending",
     });
+
+    // Decrement stock and increment soldCount
+    for (const item of cart) {
+      await bag.findByIdAndUpdate(item._id, {
+        $inc: { stock: -item.quantity, soldCount: item.quantity },
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -48,7 +69,7 @@ export const createOrder = async (req, res) => {
     console.error("Create Order Error:", error);
     res.status(500).json({
       success: false,
-      message: "Order creation failed",
+      message: error.message || "Order creation failed",
     });
   }
 };

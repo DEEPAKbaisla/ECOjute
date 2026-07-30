@@ -5,7 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 export const addBag = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, mrp, category, stock, material, weight, dimensions, isFeatured } = req.body;
 
     if (!name || !price || !req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -14,22 +14,37 @@ export const addBag = async (req, res) => {
       });
     }
 
-    // Upload all images to Cloudinary
     const uploadedImages = [];
-
     for (let file of req.files) {
       const result = await uploadCloud(file);
-
       uploadedImages.push(result.secure_url);
+    }
+
+    let parsedDims = {};
+    if (dimensions) {
+      try {
+        parsedDims = typeof dimensions === "string" ? JSON.parse(dimensions) : dimensions;
+      } catch (e) {
+        parsedDims = {};
+      }
     }
 
     const newBag = await bag.create({
       name,
       description,
       price,
+      mrp: mrp || price,
       category,
-      stock,
-      images: uploadedImages, // 👈 array save
+      stock: stock !== undefined ? Number(stock) : 0,
+      material: material || "Organic Jute",
+      weight: weight || "",
+      dimensions: {
+        width: parsedDims.width || "",
+        height: parsedDims.height || "",
+        depth: parsedDims.depth || "",
+      },
+      isFeatured: isFeatured === "true" || isFeatured === true,
+      images: uploadedImages,
     });
 
     res.json({
@@ -56,10 +71,19 @@ export const getAllBags = async (req, res) => {
   }
 };
 
+export const getFeaturedBags = async (req, res) => {
+  try {
+    const bags = await bag.find({ isFeatured: true }).sort({ createdAt: -1 });
+    res.json({ success: true, data: bags });
+  } catch (error) {
+    res.json({ success: false, message: "Error fetching featured bags", error });
+  }
+};
+
 export const updateBag = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, mrp, category, stock, material, weight, dimensions, isFeatured } = req.body;
 
     const bagData = await bag.findById(id);
     if (!bagData) {
@@ -69,7 +93,6 @@ export const updateBag = async (req, res) => {
       });
     }
 
-    // Handle image updates (merge remaining existing images and new uploads)
     let imagesToKeep = [];
     if (req.body.existingImages) {
       try {
@@ -94,21 +117,31 @@ export const updateBag = async (req, res) => {
       }
     }
 
-    // Only update if existingImages was explicitly sent or new images were uploaded
-    if (
-      req.body.existingImages !== undefined ||
-      (req.files && req.files.length > 0)
-    ) {
+    if (req.body.existingImages !== undefined || (req.files && req.files.length > 0)) {
       bagData.images = [...imagesToKeep, ...newUploadedImages];
     }
 
-    // Update fields
+    let parsedDims = bagData.dimensions;
+    if (dimensions) {
+      try {
+        parsedDims = typeof dimensions === "string" ? JSON.parse(dimensions) : dimensions;
+      } catch (e) {}
+    }
+
     bagData.name = name || bagData.name;
-    bagData.description = description || bagData.description;
+    bagData.description = description !== undefined ? description : bagData.description;
     bagData.price = price || bagData.price;
+    bagData.mrp = mrp !== undefined ? mrp : bagData.mrp;
     bagData.category = category || bagData.category;
-    bagData.stock =
-      stock !== undefined ? stock === "true" || stock === true : bagData.stock;
+    bagData.stock = stock !== undefined ? Number(stock) : bagData.stock;
+    bagData.material = material || bagData.material;
+    bagData.weight = weight !== undefined ? weight : bagData.weight;
+    bagData.dimensions = {
+      width: parsedDims.width || bagData.dimensions.width,
+      height: parsedDims.height || bagData.dimensions.height,
+      depth: parsedDims.depth || bagData.dimensions.depth,
+    };
+    bagData.isFeatured = isFeatured !== undefined ? isFeatured === "true" || isFeatured === true : bagData.isFeatured;
 
     await bagData.save();
 
@@ -133,7 +166,7 @@ export const updateBagStatus = async (req, res) => {
 
     const updatedBag = await bag.findByIdAndUpdate(
       id,
-      { stock },
+      { stock: Number(stock) },
       { new: true },
     );
 
@@ -146,13 +179,13 @@ export const updateBagStatus = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Bag status updated",
+      message: "Stock updated",
       bag: updatedBag,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Status update failed",
+      message: "Stock update failed",
       error: error.message,
     });
   }
@@ -161,8 +194,6 @@ export const updateBagStatus = async (req, res) => {
 export const deleteBag = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Find bag first
     const bagData = await bag.findById(id);
 
     if (!bagData) {
@@ -172,33 +203,18 @@ export const deleteBag = async (req, res) => {
       });
     }
 
-    // Delete all Cloudinary images
     for (const imageUrl of bagData.images) {
       try {
-        // Remove query params if any
         const cleanUrl = imageUrl.split("?")[0];
-
-        // Remove extension (.jpg, .png, .webp...)
-        const withoutExtension = cleanUrl.substring(
-          0,
-          cleanUrl.lastIndexOf("."),
-        );
-
-        // Get everything after "/upload/"
+        const withoutExtension = cleanUrl.substring(0, cleanUrl.lastIndexOf("."));
         const path = withoutExtension.split("/upload/")[1];
-
-        // Remove version (v123456789/)
         const publicId = path.replace(/^v\d+\//, "");
-
-        console.log("Deleting:", publicId);
-
         await cloudinary.uploader.destroy(publicId);
       } catch (err) {
         console.error("Failed to delete image:", imageUrl, err);
       }
     }
 
-    // Delete bag document
     await bag.findByIdAndDelete(id);
 
     res.json({
@@ -207,7 +223,6 @@ export const deleteBag = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       success: false,
       message: "Delete failed",

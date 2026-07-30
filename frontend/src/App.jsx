@@ -22,6 +22,7 @@ const ManageBags = lazy(() => import("./pages/admin/ManageBags"));
 const EditBag = lazy(() => import("./pages/admin/EditBag"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const HeritageLoom = lazy(() => import("./components/HeritageLoom"));
 
 // Loading fallback
 const PageLoader = () => (
@@ -62,6 +63,7 @@ function App() {
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/heritage-loom" element={<HeritageLoom />} />
 
           <Route
             path="/products"

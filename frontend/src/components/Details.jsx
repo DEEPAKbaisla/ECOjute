@@ -183,23 +183,11 @@ function Details() {
               className="font-sans text-xs uppercase font-extrabold tracking-wider bg-[#061b0e] text-white hover:bg-[#1b3022] mt-6 px-6 py-2.5 rounded transition-transform active:scale-95 cursor-pointer shadow flex items-center gap-2 h-fit w-fit">
               <span>Read Weaving Story</span>
             </button> */}
-            <div className="relative inline-block mt-6">
-              <button
-                disabled
-                className="font-sans text-xs uppercase font-extrabold tracking-wider
-               bg-gray-400 text-white px-6 py-2.5 rounded
-               cursor-not-allowed opacity-70 shadow
-               flex items-center gap-2 h-fit w-fit ">
-                Read Weaving Story
-              </button>
-
-              <span
-                className="absolute -top-2 -right-2 bg-amber-500 text-white
-               text-[10px] px-2 py-0.5 rounded-full
-               font-bold uppercase">
-                Coming Soon
-              </span>
-            </div>
+            <Link
+              to="/heritage-loom"
+              className="inline-flex items-center gap-2 mt-6 font-sans text-xs uppercase font-extrabold tracking-wider bg-foreground text-background px-6 py-2.5 rounded hover:opacity-90 transition-all active:scale-95 shadow h-fit w-fit">
+              <span>Read Weaving Story</span>
+            </Link>
           </div>
 
           <div className="aspect-[16/10] rounded-2xl overflow-hidden shadow-inner relative border border-border">
