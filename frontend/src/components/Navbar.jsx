@@ -52,20 +52,18 @@ function Navbar() {
             <Handbag />
           </a>
 
-          {authUser?.role === "USER" && (
-            <Link
-              to="/cart"
-              className="relative h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary flex"
-            >
-              <ShoppingCart className="h-5 w-5" />
+          <Link
+            to="/cart"
+            className="relative h-10 w-10 items-center justify-center rounded-full border border-border text-foreground/80 transition hover:-translate-y-0.5 hover:border-primary hover:text-primary flex"
+          >
+            <ShoppingCart className="h-5 w-5" />
 
-              {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 rounded-full bg-destructive px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          )}
+            {cartCount > 0 && (
+              <span className="absolute -right-2 -top-2 rounded-full bg-destructive px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                {cartCount}
+              </span>
+            )}
+          </Link>
 
           {authUser?.role === "ADMIN" && (
             <a

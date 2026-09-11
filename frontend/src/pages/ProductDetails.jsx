@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "motion/react";
 import api from "@/api/axios";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthProvider";
 import Navbar from "@/components/Navbar";
 import {
   ChevronDown,
@@ -20,7 +21,7 @@ import {
   Recycle,
   Star,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 
 
@@ -57,7 +58,9 @@ const getArtisanByCategory = (category) => {
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { cart, addToCart } = useCart();
+  const { authUser } = useAuth();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -78,6 +81,11 @@ const ProductDetails = () => {
   });
 
   const handleAddToCart = () => {
+    if (!authUser) {
+      toast.info("Please signup first");
+      navigate("/signup");
+      return;
+    }
     if (bag) {
       addToCart(bag);
       toast.success(`${bag.name} added to cart!`);

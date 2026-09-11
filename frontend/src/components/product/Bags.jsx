@@ -6,9 +6,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Leaf, ShoppingBag, ArrowUpRight } from "lucide-react";
 
@@ -123,6 +124,8 @@ const SkeletonGrid = () => (
 
 const BagList = () => {
   const { cart, addToCart } = useCart();
+  const { authUser } = useAuth();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const {
@@ -138,10 +141,15 @@ const BagList = () => {
 
   const handleAddToCart = useCallback(
     (bag) => {
+      if (!authUser) {
+        toast.info("Please signup first");
+        navigate("/signup");
+        return;
+      }
       addToCart(bag);
       toast.success(`${bag.name} added to cart!`);
     },
-    [addToCart],
+    [addToCart, authUser, navigate],
   );
 
   const filteredBags =

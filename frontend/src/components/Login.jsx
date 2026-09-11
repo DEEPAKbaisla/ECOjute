@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import api from "../api/axios";
 import GoogleSignIn from "./GoogleSignIn";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Leaf } from "lucide-react";
+import { Loader2, Leaf, Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ function Login() {
   } = useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { setAuthUser } = useAuth();
 
   const onSubmit = async (data) => {
@@ -84,13 +85,21 @@ function Login() {
                   )}
                 </div>
 
-                <div>
+                <div className="relative">
                   <Input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Password"
                     disabled={loading}
+                    className="pr-10"
                     {...register("password", { required: true })}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                  </button>
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">
                       Password is required

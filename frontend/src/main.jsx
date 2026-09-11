@@ -1,6 +1,11 @@
 
 import { createRoot } from "react-dom/client";
 import "./index.css";
+
+// Apply saved theme immediately to prevent flash
+const savedTheme = localStorage.getItem("theme") || "light";
+document.documentElement.classList.add(savedTheme);
+
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "./context/AuthProvider.jsx";

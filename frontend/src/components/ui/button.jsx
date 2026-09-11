@@ -27,7 +27,7 @@ const Button = React.forwardRef(
     const variants = {
       // Primary eco-green button that adapts to light/dark via CSS vars
       default:
-        "bg-[#203527] text-primary-foreground shadow-sm hover:bg-[#4D6453] active:scale-[0.98] rounded-2xl",
+        "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] rounded-2xl",
       // Subtle green outline button
       outline:
         "border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
@@ -37,7 +37,7 @@ const Button = React.forwardRef(
         "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm",
       destructive:
         "bg-destructive text-primary-foreground hover:bg-destructive/90",
-        filter:"bg-[#203527] text-primary-foreground shadow-sm hover:bg-[#4D6453] active:scale-[0.98] rounded-2xl",
+        filter:"bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98] rounded-2xl",
         nonfilter:"border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded-2xl",
     };
 
